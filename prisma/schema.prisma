@@ -12,16 +12,26 @@ datasource db {
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String @id @default(uuid())
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Likes Like[]
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+  @@index([userId])
+}
 
-    @@index([name])
-    @@index([createdById])
+model Like {
+  userId    String
+  postId   String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([userId, postId])
+  @@index([userId])
+  @@index([postId])
 }
 
 // Necessary for Next auth
@@ -62,7 +72,12 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+
+    // Non-Next Auth
     posts         Post[]
+    likes         Like[]
+    followers     User[] @relation(name: "Followers")
+    follows       User[] @relation(name: "Followers")
 }
 
 model VerificationToken {
