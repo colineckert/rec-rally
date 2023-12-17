@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react"
 import { Button } from "./Button"
 import { ProfileImage } from "./ProfileImage"
 
-export function NewTweetForm() {
+export function NewPostForm() {
   const session = useSession()
 
   if (session.status !== 'authenticated') return
