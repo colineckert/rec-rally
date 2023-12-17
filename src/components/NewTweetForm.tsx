@@ -1,3 +1,5 @@
+import { Button } from "./Button"
+
 export function NewTweetForm() {
   return (
     <form className="flex flex-col gap-2 border-b px-4 py-2">
@@ -8,7 +10,7 @@ export function NewTweetForm() {
           placeholder="What's happening?"
         />
       </div>
-      <button>asdfa</button>
+      <Button className="self-end">Tweet</Button>
     </form>
   )
 };
