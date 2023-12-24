@@ -71,7 +71,7 @@ function PostListItem({
   likeCount,
   likedByMe,
 }: Post) {
-  const trpcUtils = api.useContext();
+  const trpcUtils = api.useUtils();
   const toggleLike = api.post.toggleLike.useMutation({
     onSuccess: async ({ addedLike }) => {
       const updateData: Parameters<
