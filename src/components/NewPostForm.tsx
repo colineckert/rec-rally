@@ -25,14 +25,45 @@ function Form() {
     textAreaRef.current = textArea;
   }, []);
 
+  const trpcUtils = api.useUtils();
+
   useLayoutEffect(() => {
     updateTextAreaSize(textAreaRef.current);
   }, [inputValue]);
 
   const createPost = api.post.create.useMutation({
     onSuccess: (newPost) => {
-      console.log(newPost);
       setInputValue("");
+
+      if (session.status !== "authenticated") {
+        return;
+      }
+
+      trpcUtils.post.infiniteFeed.setInfiniteData({}, (oldData) => {
+        if (oldData?.pages[0] == null) return;
+
+        const newCachePost = {
+          ...newPost,
+          likeCount: 0,
+          likedByMe: false,
+          user: {
+            id: session.data.user.id,
+            name: session.data.user.name ?? null,
+            image: session.data.user.image ?? null,
+          },
+        };
+
+        return {
+          ...oldData,
+          pages: [
+            {
+              ...oldData.pages[0],
+              posts: [newCachePost, ...oldData.pages[0].posts],
+            },
+            ...oldData.pages.slice(1),
+          ],
+        };
+      });
     },
   });
 
@@ -40,6 +71,7 @@ function Form() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
     createPost.mutate({ content: inputValue });
   }
 
@@ -53,6 +85,7 @@ function Form() {
         <textarea
           ref={inputRef}
           style={{ height: 0 }}
+          value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           className="flex-grow resize-none overflow-hidden p-4 text-lg outline-none"
           placeholder="What's happening?"
