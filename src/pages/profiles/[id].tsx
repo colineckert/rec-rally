@@ -6,17 +6,24 @@ import type {
 } from "next";
 import Head from "next/head";
 import ErrorPage from "next/error";
+import { useSession } from "next-auth/react";
 import { ssgHelper } from "~/server/api/ssgHelper";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
 import { VscArrowLeft } from "react-icons/vsc";
 import { ProfileImage } from "~/components/ProfileImage";
+import { InfinitePostList } from "~/components/InfinitePostList";
+import { Button } from "~/components/Button";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
   const { data: profile } = api.profile.getById.useQuery({ id });
+  const posts = api.post.infiniteProfileFeed.useInfiniteQuery(
+    { userId: id },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor },
+  );
 
   if (profile?.name == null) return <ErrorPage statusCode={404} />;
 
@@ -42,10 +49,46 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             {profile.followsCount} Following
           </div>
         </div>
+        <FollowButton
+          isFollowing={profile.isFollowing}
+          userId={id}
+          onClick={() => null}
+        />
       </header>
+      <main>
+        <InfinitePostList
+          posts={posts.data?.pages.flatMap((page) => page.posts)}
+          isError={posts.isError}
+          isLoading={posts.isLoading}
+          hasMore={posts.hasNextPage}
+          fetchNewPosts={posts.fetchNextPage}
+        />
+      </main>
     </>
   );
 };
+
+function FollowButton({
+  userId,
+  isFollowing,
+  onClick,
+}: {
+  userId: string;
+  isFollowing: boolean;
+  onClick: () => void;
+}) {
+  const session = useSession();
+
+  if (session.status !== "authenticated" || session.data.user.id === userId) {
+    return null;
+  }
+
+  return (
+    <Button onClick={onClick} small gray={isFollowing}>
+      {isFollowing ? "Unfollow" : "Follow"}
+    </Button>
+  );
+}
 
 const pluralRules = new Intl.PluralRules();
 function getPlural(number: number, singular: string, plural: string) {
