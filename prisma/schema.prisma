@@ -20,9 +20,28 @@ model Post {
   user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes Like[]
 
+  type      PostType @default(SOCIAL)
+  teamOneId String?
+  teamTwoId String?
+
+  // Comment   Comment[]
+
   @@unique([createdAt, id])
   @@index([userId])
 }
+
+enum PostType {
+  SOCIAL
+  GAME_RECAP
+  GAME_INVITE
+}
+
+// TODO: Add comments
+// model Comment {
+//   id     String
+//   Post   Post   @relation(fields: [postId], references: [id]) // A comment can have one post
+//   postId String
+// }
 
 model Like {
   userId String
@@ -79,6 +98,11 @@ model User {
   likes     Like[]
   followers User[] @relation(name: "Followers")
   follows   User[] @relation(name: "Followers")
+
+  position     String?
+  managedTeams Team[]   @relation(name: "TeamManager")
+  playerTeams  Team[]   @relation(name: "TeamPlayers")
+  League       League[]
 }
 
 model VerificationToken {
@@ -87,4 +111,35 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  managerId   String
+  createdAt   DateTime @default(now())
+
+  manager  User    @relation(name: "TeamManager", fields: [managerId], references: [id], onDelete: Cascade)
+  players  User[]  @relation(name: "TeamPlayers")
+  League   League? @relation(fields: [leagueId], references: [id])
+  leagueId String?
+
+  @@unique([name, id])
+  @@index([managerId])
+  @@index([leagueId])
+}
+
+model League {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  managerId String?
+  manager   User?    @relation(fields: [managerId], references: [id], onDelete: Cascade)
+  teams     Team[]
+
+  @@unique([name, id])
+  @@index([managerId])
 }
