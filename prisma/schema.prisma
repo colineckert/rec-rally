@@ -21,8 +21,8 @@ model Post {
   likes Like[]
 
   type      PostType @default(SOCIAL)
-  teamOneId String?
-  teamTwoId String?
+  homeTeamId String?
+  awayTeamId String?
 
   // Comment   Comment[]
 
