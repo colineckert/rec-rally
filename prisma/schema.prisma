@@ -143,3 +143,17 @@ model League {
   @@unique([name, id])
   @@index([managerId])
 }
+
+model Game {
+  id         String   @id @default(cuid())
+  homeTeamId String
+  awayTeamId String
+  date       DateTime @default(now())
+  location   String?
+  createdAt  DateTime @default(now())
+  leagueId   String?
+
+  @@unique([homeTeamId, awayTeamId, date])
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+}
