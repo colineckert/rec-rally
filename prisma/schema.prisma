@@ -20,7 +20,7 @@ model Post {
   user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes Like[]
 
-  type      PostType @default(SOCIAL)
+  type       PostType @default(SOCIAL)
   homeTeamId String?
   awayTeamId String?
 
@@ -137,7 +137,7 @@ model League {
   createdAt   DateTime @default(now())
 
   managerId String?
-  manager   User?    @relation(fields: [managerId], references: [id], onDelete: Cascade)
+  manager   User?   @relation(fields: [managerId], references: [id], onDelete: Cascade)
   teams     Team[]
 
   @@unique([name, id])
