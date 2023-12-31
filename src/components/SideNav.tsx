@@ -2,18 +2,28 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { IconHoverEffect } from "./IconHoverEffect";
 import { VscAccount, VscHome, VscSignIn, VscSignOut } from "react-icons/vsc";
+import { useRouter } from "next/router";
 
 export function SideNav() {
   const session = useSession();
   const user = session.data?.user;
+  const { pathname } = useRouter()
+
+  const isSelected = (path: string) => {
+    let boldStyles = '';
+    if (pathname === path) {
+      boldStyles = 'font-bold';
+    }
+    return boldStyles;
+  }
 
   return (
-    <nav className="sticky top-0 px-2 py-4">
+    <nav className="sticky top-0 px-4 py-4">
       <ul className="flex flex-col items-start gap-2 whitespace-nowrap">
         <li>
           <Link href="/">
             <IconHoverEffect>
-              <span className="flex items-center gap-4">
+              <span className={`flex items-center gap-4 ${isSelected('/')}`}>
                 <VscHome className="h-8 w-8" />
                 <span className="hidden text-lg md:inline">Home</span>
               </span>
@@ -24,7 +34,7 @@ export function SideNav() {
           <li>
             <Link href={`/profiles/${user.id}`}>
               <IconHoverEffect>
-                <span className="flex items-center gap-4">
+                <span className={`flex items-center gap-4 ${isSelected('/profiles/[id]')}`}>
                   <VscAccount className="h-8 w-8" />
                   <span className="hidden text-lg md:inline">Profile</span>
                 </span>
