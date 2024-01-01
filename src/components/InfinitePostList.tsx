@@ -87,6 +87,12 @@ export function InfinitePostList({
   );
 }
 
+function getFormattedDate(date: Date, type: "short" | "long") {
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: type,
+  }).format(date);
+}
+
 function PostListItem({
   id,
   user,
@@ -138,10 +144,6 @@ function PostListItem({
     },
   });
 
-  const dataTimeFormatter = new Intl.DateTimeFormat(undefined, {
-    dateStyle: "short",
-  });
-
   function handleToggleLike() {
     toggleLike.mutate({ id });
   }
@@ -161,7 +163,7 @@ function PostListItem({
           </Link>
           <span className="text-gray-500">-</span>
           <span className="text-gray-500">
-            {dataTimeFormatter.format(createdAt)}
+            {getFormattedDate(createdAt, "short")}
           </span>
         </div>
         <p className="whitespace-pre-wrap">{content}</p>
@@ -230,19 +232,16 @@ function GameRecapListItem({
     },
   });
 
-  const dataTimeFormatter = new Intl.DateTimeFormat(undefined, {
-    dateStyle: "long",
-  });
-
   function handleToggleLike() {
     toggleLike.mutate({ id });
   }
 
+  // TODO: try using a grid layout for this
   return (
     <li key={id} className="flex gap-4 border-b px-4 py-4">
       <div className="flex flex-grow flex-col">
         <span className="text-gray-500 self-center">
-          {dataTimeFormatter.format(createdAt)}
+          {getFormattedDate(createdAt, "long")}
         </span>
         <div className="flex flex-row justify-center gap-14 py-4">
           <Link
