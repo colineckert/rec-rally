@@ -10,6 +10,9 @@ import { profileRouter } from "./routers/profile";
 export const appRouter = createTRPCRouter({
   post: postRouter,
   profile: profileRouter,
+  // TODO: add routers for teams and leagues
+  // team: teamRouter,
+  // league: leagueRouter,
 });
 
 // export type definition of API
