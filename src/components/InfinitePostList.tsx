@@ -10,6 +10,7 @@ import { LoadingSpinner } from "./LoadingSpinner";
 type Post = {
   id: string;
   content: string;
+  type: "SOCIAL" | "GAME_RECAP";
   createdAt: Date;
   likeCount: number;
   likedByMe: boolean;
@@ -18,6 +19,10 @@ type Post = {
     image: string | null;
     name: string | null;
   };
+  homeTeam: string;
+  awayTeam: string;
+  homeTeamScore: number;
+  awayTeamScore: number;
 };
 
 type InfinitePostListProps = {
@@ -52,17 +57,33 @@ export function InfinitePostList({
         hasMore={hasMore}
         loader={<LoadingSpinner />}
       >
+        <GameRecapListItem
+          key="test-recap"
+          user={{
+            id: "test",
+            image: null,
+            name: "Test User",
+          }}
+          id="test-recap"
+          content=""
+          homeTeam="Arsenal"
+          awayTeam="Chelsea"
+          homeTeamScore={2}
+          awayTeamScore={1}
+          createdAt={new Date()}
+          likeCount={1}
+          likedByMe={false}
+        />
         {posts.map((post) => {
+          if (post.type === "GAME_RECAP") {
+            return <GameRecapListItem key={post.id} {...post} />;
+          }
           return <PostListItem key={post.id} {...post} />;
         })}
       </InfiniteScroll>
     </ul>
   );
 }
-
-const dataTimeFormatter = new Intl.DateTimeFormat(undefined, {
-  dateStyle: "short",
-});
 
 function PostListItem({
   id,
@@ -113,6 +134,10 @@ function PostListItem({
         updateData,
       );
     },
+  });
+
+  const dataTimeFormatter = new Intl.DateTimeFormat(undefined, {
+    dateStyle: "short",
   });
 
   function handleToggleLike() {
@@ -195,5 +220,124 @@ function HearButton({
       </IconHoverEffect>
       <span>{likeCount}</span>
     </button>
+  );
+}
+
+type GameRecapListItemProps = {
+  id: string;
+  homeTeam: string;
+  awayTeam: string;
+  homeTeamScore: number;
+  awayTeamScore: number;
+  content: string;
+  createdAt: Date;
+  likeCount: number;
+  likedByMe: boolean;
+  user: {
+    id: string;
+    image: string | null;
+    name: string | null;
+  };
+};
+
+function GameRecapListItem({
+  id,
+  user,
+  homeTeam,
+  awayTeam,
+  homeTeamScore,
+  awayTeamScore,
+  createdAt,
+  likeCount,
+  likedByMe,
+}: GameRecapListItemProps) {
+  const trpcUtils = api.useUtils();
+  const toggleLike = api.post.toggleLike.useMutation({
+    onSuccess: async ({ addedLike }) => {
+      const updateData: Parameters<
+        typeof trpcUtils.post.infiniteFeed.setInfiniteData
+      >[1] = (oldData) => {
+        if (oldData == null) return;
+
+        const coundModifier = addedLike ? 1 : -1;
+
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => {
+            return {
+              ...page,
+              posts: page.posts.map((post) => {
+                if (post.id === id) {
+                  return {
+                    ...post,
+                    likeCount: post.likeCount + coundModifier,
+                    likedByMe: addedLike,
+                  };
+                }
+
+                return post;
+              }),
+            };
+          }),
+        };
+      };
+
+      trpcUtils.post.infiniteFeed.setInfiniteData({}, updateData);
+      trpcUtils.post.infiniteFeed.setInfiniteData(
+        { onlyFollowing: true },
+        updateData,
+      );
+      trpcUtils.post.infiniteProfileFeed.setInfiniteData(
+        { userId: user.id },
+        updateData,
+      );
+    },
+  });
+
+  const dataTimeFormatter = new Intl.DateTimeFormat(undefined, {
+    dateStyle: "long",
+  });
+
+  function handleToggleLike() {
+    toggleLike.mutate({ id });
+  }
+
+  return (
+    <li key={id} className="flex gap-4 border-b px-4 py-4">
+      <div className="flex flex-grow flex-col">
+        <span className="text-gray-500 self-center">
+          {dataTimeFormatter.format(createdAt)}
+        </span>
+        <div className="flex flex-row justify-center gap-14 py-4">
+          <Link
+            href={`/`}
+            className="font-bold hover:underline focus-visible:underline"
+          >
+            {homeTeam}
+          </Link>
+          <div />
+          <Link
+            href={`/`}
+            className="font-bold hover:underline focus-visible:underline"
+          >
+            {awayTeam}
+          </Link>
+          {/* TODO: add images for teams */}
+        </div>
+        <div className="flex flex-row justify-center gap-20">
+          <span className="font-bold">{homeTeamScore}</span>
+          <span className="text-gray-500">-</span>
+          <span className="font-bold">{awayTeamScore}</span>
+        </div>
+        <div className="self-end">
+          <HearButton
+            onClick={handleToggleLike}
+            isLoading={toggleLike.isLoading}
+            likedByMe={likedByMe}
+            likeCount={likeCount}
+          />
+        </div>
+      </div>
+    </li>
   );
 }
