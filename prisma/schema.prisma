@@ -102,7 +102,7 @@ model User {
   position     String?
   managedTeams Team[]   @relation(name: "TeamManager")
   playerTeams  Team[]   @relation(name: "TeamPlayers")
-  League       League[]
+  leagues      League[]
 }
 
 model VerificationToken {
@@ -122,7 +122,7 @@ model Team {
 
   manager  User    @relation(name: "TeamManager", fields: [managerId], references: [id], onDelete: Cascade)
   players  User[]  @relation(name: "TeamPlayers")
-  League   League? @relation(fields: [leagueId], references: [id])
+  league   League? @relation(fields: [leagueId], references: [id])
   leagueId String?
 
   @@unique([name, id])
