@@ -5,7 +5,7 @@ import { InfinitePostList } from "~/components/InfinitePostList";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
-const TABS = ["Recent", "Following"] as const;
+const TABS = ["Recent", "Following", "My Teams"] as const;
 
 const Home: NextPage = () => {
   const [selectedTab, setSelectedTab] = useState<typeof TABS[number]>("Recent");

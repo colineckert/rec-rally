@@ -11,7 +11,7 @@ import { ssgHelper } from "~/server/api/ssgHelper";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
-import { VscArrowLeft } from "react-icons/vsc";
+import { HiArrowLeft } from "react-icons/hi";
 import { ProfileImage } from "~/components/ProfileImage";
 import { InfinitePostList } from "~/components/InfinitePostList";
 import { Button } from "~/components/Button";
@@ -51,7 +51,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <header className="sticky top-0 z-10 flex items-center border-b bg-white px-4 py-2">
         <Link href=".." className="mr-2">
           <IconHoverEffect>
-            <VscArrowLeft className="h-6 w-6" />
+            <HiArrowLeft className="h-6 w-6" />
           </IconHoverEffect>
         </Link>
         <ProfileImage src={profile.image} className="flex-shrink-0" />
