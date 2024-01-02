@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { postRouter } from "~/server/api/routers/post";
 import { profileRouter } from "./routers/profile";
+import { teamRouter } from "./routers/team";
 
 /**
  * This is the primary router for your server.
@@ -10,8 +11,8 @@ import { profileRouter } from "./routers/profile";
 export const appRouter = createTRPCRouter({
   post: postRouter,
   profile: profileRouter,
-  // TODO: add routers for teams and leagues
-  // team: teamRouter,
+  team: teamRouter,
+  // TODO: add routers for leagues
   // league: leagueRouter,
 });
 

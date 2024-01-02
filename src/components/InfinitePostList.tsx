@@ -10,7 +10,7 @@ import { LoadingSpinner } from "./LoadingSpinner";
 type Post = {
   id: string;
   content: string;
-  type: "SOCIAL" | "GAME_RECAP";
+  type: "SOCIAL" | "GAME_RECAP" | "GAME_INVITE";
   createdAt: Date;
   likeCount: number;
   likedByMe: boolean;
@@ -19,10 +19,10 @@ type Post = {
     image: string | null;
     name: string | null;
   };
-  homeTeam: string;
-  awayTeam: string;
-  homeTeamScore: number;
-  awayTeamScore: number;
+  homeTeamId: string | null;
+  awayTeamId: string | null;
+  homeScore: number | null;
+  awayScore: number | null;
 };
 
 type InfinitePostListProps = {
@@ -68,10 +68,10 @@ export function InfinitePostList({
           }}
           id="test-recap"
           content=""
-          homeTeam="Arsenal"
-          awayTeam="Chelsea"
-          homeTeamScore={2}
-          awayTeamScore={1}
+          homeTeamId="Arsenal"
+          awayTeamId="Chelsea"
+          homeScore={2}
+          awayScore={1}
           createdAt={new Date()}
           likeCount={1}
           likedByMe={false}
@@ -181,10 +181,10 @@ function PostListItem({
 function GameRecapListItem({
   id,
   user,
-  homeTeam,
-  awayTeam,
-  homeTeamScore,
-  awayTeamScore,
+  homeTeamId,
+  awayTeamId,
+  homeScore,
+  awayScore,
   createdAt,
   likeCount,
   likedByMe,
@@ -236,6 +236,8 @@ function GameRecapListItem({
     toggleLike.mutate({ id });
   }
 
+  // TODO: get team names from id
+
   // TODO: try using a grid layout for this
   return (
     <li key={id} className="flex gap-4 border-b px-4 py-4">
@@ -248,21 +250,21 @@ function GameRecapListItem({
             href={`/`}
             className="font-bold hover:underline focus-visible:underline"
           >
-            {homeTeam}
+            Arsenal
           </Link>
           <div />
           <Link
             href={`/`}
             className="font-bold hover:underline focus-visible:underline"
           >
-            {awayTeam}
+            Chelsea
           </Link>
           {/* TODO: add images for teams */}
         </div>
         <div className="flex flex-row justify-center gap-20">
-          <span className="font-bold">{homeTeamScore}</span>
+          <span className="font-bold">{homeScore}</span>
           <span className="text-gray-500">-</span>
-          <span className="font-bold">{awayTeamScore}</span>
+          <span className="font-bold">{awayScore}</span>
         </div>
         <div className="self-end">
           <HearButton
