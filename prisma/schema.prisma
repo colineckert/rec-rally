@@ -14,17 +14,19 @@ datasource db {
 model Post {
   id        String   @id @default(uuid())
   userId    String
+  type       PostType @default(SOCIAL)
   content   String
   createdAt DateTime @default(now())
 
   user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes Like[]
 
-  type       PostType @default(SOCIAL)
   homeTeamId String?
   awayTeamId String?
+  homeScore  Int?     @default(0)
+  awayScore  Int?     @default(0)
 
-  // Comment   Comment[]
+// Comment   Comment[]
 
   @@unique([createdAt, id])
   @@index([userId])
@@ -116,6 +118,7 @@ model VerificationToken {
 model Team {
   id          String   @id @default(cuid())
   name        String
+  image       String?
   description String?
   managerId   String
   createdAt   DateTime @default(now())
