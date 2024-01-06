@@ -39,7 +39,7 @@ const TeamsPage: NextPage = (): JSX.Element => {
     console.log("***Create a team click***");
 
     createTeam.mutate({
-      name: "Arsenal - test 1",
+      name: "Arsenal - test 3",
       image: "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1200px-Arsenal_FC.svg.png",
     });
   }
@@ -65,10 +65,17 @@ const TeamsPage: NextPage = (): JSX.Element => {
         </Button>
       </header>
       <main className="p-8">
-        <h2 className="text-2xl pb-4">My Teams</h2>
-        <div className="grid grid-cols-2">
+        <div className="grid grid-row-3 auto-rows-fr sm:grid-cols-3">
           <ManagedTeams userId={user.id} />
           <PlayerTeams userId={user.id} />
+          <div className="px-2 text-end">
+            <h3 className="text-lg font-bold pb-2">Invites</h3>
+            <ul>
+              <li>
+                <Link href={`/teams/1`}>Chelsea</Link>
+              </li>
+            </ul>
+          </div>
         </div>
       </main>
     </>
@@ -84,11 +91,11 @@ function ManagedTeams({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pb-4 px-2">
       <h3 className="text-lg font-bold pb-2">Managed Teams</h3>
       <ul>
         {managedTeams?.map((team) => (
-          <li key={team.id}>
+          <li key={team.id} className="py-1">
             <Link href={`/teams/${team.id}`}>{team.name}</Link>
           </li>
         ))}
@@ -106,16 +113,21 @@ function PlayerTeams({ userId }: { userId: string }) {
   }
 
   return (
-    <>
+    <div className="flex flex-col pb-4 px-2">
       <h3 className="text-lg font-bold pb-2">Player Teams</h3>
       <ul>
+        {playerTeams?.length === 0 && (
+          <li className="py-6 bg-red-50 text-center border rounded border-red-100 text-red-500">
+            You are not a member of any teams.
+          </li>
+        )}
         {playerTeams?.map((team) => (
-          <li key={team.id}>
+          <li key={team.id} className="py-1">
             <Link href={`/teams/${team.id}`}>{team.name}</Link>
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 
