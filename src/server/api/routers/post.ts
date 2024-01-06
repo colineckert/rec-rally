@@ -63,6 +63,46 @@ export const postRouter = createTRPCRouter({
 
       return post;
     }),
+  createGameRecap: protectedProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        score: z.object({
+          home: z.number(),
+          away: z.number(),
+        }),
+        homeTeamId: z.string(),
+        awayTeamId: z.string(),
+      }),
+    )
+    .mutation(
+      async ({ input: { content, score, homeTeamId, awayTeamId }, ctx }) => {
+        const post = await ctx.db.post.create({
+          data: {
+            content,
+            type: "GAME_RECAP",
+            homeTeamId,
+            awayTeamId,
+            userId: ctx.session.user.id,
+          },
+        });
+
+        const game = await ctx.db.game.create({
+          data: {
+            homeTeamId,
+            awayTeamId,
+            homeScore: score.home,
+            awayScore: score.away,
+            date: new Date(),
+            leagueId: await getLeagueId({ teamId: homeTeamId, ctx }),
+          },
+        });
+
+        void ctx.revalidateSSG?.(`/profiles/${ctx.session.user.id}`);
+
+        return { post, game };
+      },
+    ),
   toggleLike: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id }, ctx }) => {
@@ -80,6 +120,22 @@ export const postRouter = createTRPCRouter({
       }
     }),
 });
+
+async function getLeagueId({
+  teamId,
+  ctx,
+}: {
+  teamId: string;
+  ctx: inferAsyncReturnType<typeof createTRPCContext>;
+}) {
+  const team = await ctx.db.team.findUnique({ where: { id: teamId } });
+
+  if (team == null) {
+    throw new Error(`Team not found: ${teamId}`);
+  }
+
+  return team.leagueId;
+}
 
 async function getInfinitePosts({
   whereClause,
@@ -102,6 +158,7 @@ async function getInfinitePosts({
     select: {
       id: true,
       content: true,
+      type: true,
       createdAt: true,
       _count: { select: { likes: true } },
       likes:
@@ -109,6 +166,10 @@ async function getInfinitePosts({
       user: {
         select: { name: true, id: true, image: true },
       },
+      homeTeamId: true,
+      awayTeamId: true,
+      homeScore: true,
+      awayScore: true,
     },
   });
 
@@ -125,10 +186,15 @@ async function getInfinitePosts({
       return {
         id: post.id,
         content: post.content,
+        type: post.type,
         createdAt: post.createdAt,
         likeCount: post._count.likes,
         user: post.user,
         likedByMe: post.likes?.length > 0,
+        homeTeamId: post.homeTeamId,
+        awayTeamId: post.awayTeamId,
+        homeScore: post.homeScore,
+        awayScore: post.awayScore,
       };
     }),
     nextCursor,
