@@ -189,6 +189,8 @@ function GameRecapListItem({
   likeCount,
   likedByMe,
 }: Post) {
+  console.log({ homeTeamId, awayTeamId });
+
   const trpcUtils = api.useUtils();
   const toggleLike = api.post.toggleLike.useMutation({
     onSuccess: async ({ addedLike }) => {

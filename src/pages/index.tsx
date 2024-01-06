@@ -33,7 +33,9 @@ const Home: NextPage = () => {
         )}
       </header>
       <NewPostForm />
-      {selectedTab === 'Recent' ? <RecentPosts /> : <FollowingPosts />}
+      {selectedTab === 'Recent' && <RecentPosts />}
+      {selectedTab === 'Following' && <FollowingPosts />}
+      {selectedTab === 'My Teams' && <MyTeamsPosts />}
     </>
   );
 };
@@ -64,6 +66,24 @@ function FollowingPosts() {
   return (
     <InfinitePostList
       posts={posts.data?.pages.flatMap((page) => page.posts)}
+      isError={posts.isError}
+      isLoading={posts.isLoading}
+      hasMore={posts.hasNextPage}
+      fetchNewPosts={posts.fetchNextPage}
+    />
+  );
+}
+
+function MyTeamsPosts() {
+  // TODO: implement
+  const posts = api.post.infiniteFeed.useInfiniteQuery(
+    { onlyFollowing: true },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor },
+  );
+
+  return (
+    <InfinitePostList
+      posts={[]}
       isError={posts.isError}
       isLoading={posts.isLoading}
       hasMore={posts.hasNextPage}
