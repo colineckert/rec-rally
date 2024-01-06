@@ -44,9 +44,9 @@ export function SideNav() {
         )}
         {user != null && (
           <li>
-            <Link href={`/teams/${user.id}`}>
+            <Link href={`/teams`}>
               <IconHoverEffect>
-                <span className={`flex items-center gap-4 ${isSelected('/profiles/[id]')}`}>
+                <span className={`flex items-center gap-4 ${isSelected('/teams')}`}>
                   <HiUserGroup className="h-8 w-8" />
                   <span className="hidden text-lg md:inline">Teams</span>
                 </span>

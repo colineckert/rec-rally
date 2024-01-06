@@ -47,6 +47,64 @@ export const teamRouter = createTRPCRouter({
         league: team.league,
       };
     }),
+  getPlayerTeamsByUserId: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ input: { userId }, ctx }) => {
+      const teams = await ctx.db.team.findMany({
+        where: {
+          players: {
+            some: {
+              id: userId,
+            },
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          league: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return teams.map((team) => ({
+        id: team.id,
+        name: team.name,
+        image: team.image,
+        league: team.league,
+      }));
+    }),
+  getManagerTeamsByUserId: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ input: { userId }, ctx }) => {
+      const teams = await ctx.db.team.findMany({
+        where: {
+          managerId: userId,
+        },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          league: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return teams.map((team) => ({
+        id: team.id,
+        name: team.name,
+        image: team.image,
+        league: team.league,
+      }));
+    }),
   create: protectedProcedure
     .input(
       z.object({
