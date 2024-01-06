@@ -24,12 +24,6 @@ export const teamRouter = createTRPCRouter({
               image: true,
             },
           },
-          league: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
         },
       });
 
@@ -44,7 +38,6 @@ export const teamRouter = createTRPCRouter({
           name: player.name,
           image: player.image,
         })),
-        league: team.league,
       };
     }),
   getPlayerTeamsByUserId: protectedProcedure
@@ -89,12 +82,6 @@ export const teamRouter = createTRPCRouter({
           id: true,
           name: true,
           image: true,
-          league: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
         },
       });
 
@@ -102,7 +89,7 @@ export const teamRouter = createTRPCRouter({
         id: team.id,
         name: team.name,
         image: team.image,
-        league: team.league,
+        // league: team.league,
       }));
     }),
   create: protectedProcedure
@@ -112,7 +99,7 @@ export const teamRouter = createTRPCRouter({
         image: z.string(),
       }),
     )
-    .query(async ({ input: { name, image }, ctx }) => {
+    .mutation(async ({ input: { name, image }, ctx }) => {
       const currentUserId = ctx.session.user.id;
       const team = await ctx.db.team.create({
         data: {

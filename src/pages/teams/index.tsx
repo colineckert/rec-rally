@@ -10,18 +10,39 @@ import { HiArrowLeft } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 
-const TeamsPage: NextPage = () => {
+const TeamsPage: NextPage = (): JSX.Element => {
   const session = useSession();
 
-  if (session.status === 'loading') {
+  const trpcUtils = api.useUtils();
+  const createTeam = api.team.create.useMutation({
+    onSuccess: (newTeam) => {
+      console.log("Success", newTeam);
+
+      trpcUtils.team.getManagerTeamsByUserId.setData({ userId: user.id }, oldData => {
+        if (oldData == null) return;
+        return [...oldData, newTeam];
+      });
+    }
+  });
+
+  if (session.status === "loading") {
     return <LoadingSpinner />;
   }
 
-  if (session.status !== 'authenticated') {
+  if (session.status !== "authenticated") {
     return <ErrorPage statusCode={404} />;
   }
 
-  const currentUser = session?.data?.user;
+  const { user } = session.data;
+
+  const handleCreateTeamClick = () => {
+    console.log("***Create a team click***");
+
+    createTeam.mutate({
+      name: "Arsenal - test 1",
+      image: "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1200px-Arsenal_FC.svg.png",
+    });
+  }
 
   return (
     <>
@@ -34,58 +55,68 @@ const TeamsPage: NextPage = () => {
             <HiArrowLeft className="h-6 w-6" />
           </IconHoverEffect>
         </Link>
-        <ProfileImage src={currentUser.image} className="flex-shrink-0" />
+        <ProfileImage src={user.image} className="flex-shrink-0" />
         <div className="ml-2 flex-grow">
-          <h1 className="text-lg font-bold">{currentUser.name}'s Teams</h1>
-          <div className="text-gray-500">
-          </div>
+          <h1 className="text-lg font-bold">{user.name}'s Teams</h1>
+          <div className="text-gray-500"></div>
         </div>
-        <Button onClick={() => console.log('Create a team click')}>Create Team</Button>
+        <Button onClick={handleCreateTeamClick}>
+          Create Team
+        </Button>
       </header>
-      <main>
-        <h2>Teams</h2>
-        <PlayerTeams userId={currentUser.id} />
-        <ManagedTeams userId={currentUser.id} />
+      <main className="p-8">
+        <h2 className="text-2xl pb-4">My Teams</h2>
+        <div className="grid grid-cols-2">
+          <ManagedTeams userId={user.id} />
+          <PlayerTeams userId={user.id} />
+        </div>
       </main>
     </>
+  );
+};
+
+function ManagedTeams({ userId }: { userId: string }) {
+  const { data: managedTeams, isLoading, isFetching } =
+    api.team.getManagerTeamsByUserId.useQuery({ userId });
+
+  if (isLoading || isFetching) {
+    return <LoadingSpinner />;
+  }
+
+  return (
+    <div className="flex flex-col">
+      <h3 className="text-lg font-bold pb-2">Managed Teams</h3>
+      <ul>
+        {managedTeams?.map((team) => (
+          <li key={team.id}>
+            <Link href={`/teams/${team.id}`}>{team.name}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
 function PlayerTeams({ userId }: { userId: string }) {
-  const { data: playerTeams, isLoading } = api.team.getPlayerTeamsByUserId.useQuery({ userId });
+  const { data: playerTeams, isLoading, isFetching } =
+    api.team.getPlayerTeamsByUserId.useQuery({ userId });
 
-  if (isLoading) {
-    return <LoadingSpinner />;  
+  if (isLoading || isFetching) {
+    return <LoadingSpinner />;
   }
 
   return (
-    <ul>
-      {playerTeams?.map((team) => (
-        <li key={team.id}>
-          <h4>{team.name}</h4>
-        </li>
-      ))}
-    </ul>
+    <>
+      <h3 className="text-lg font-bold pb-2">Player Teams</h3>
+      <ul>
+        {playerTeams?.map((team) => (
+          <li key={team.id}>
+            <Link href={`/teams/${team.id}`}>{team.name}</Link>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
-
-function ManagedTeams({ userId }: { userId: string }) {
-  const { data: managedTeams, isLoading } = api.team.getManagerTeamsByUserId.useQuery({ userId });
-
-  if (isLoading) {
-    return <LoadingSpinner />;  
-  }
-
-  return (
-    <ul>
-      {managedTeams?.map((team) => (
-        <li key={team.id}>
-          <h4>{team.name}</h4>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 
 export default TeamsPage;
