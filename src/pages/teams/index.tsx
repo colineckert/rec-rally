@@ -18,11 +18,14 @@ const TeamsPage: NextPage = (): JSX.Element => {
     onSuccess: (newTeam) => {
       console.log("Success", newTeam);
 
-      trpcUtils.team.getManagerTeamsByUserId.setData({ userId: user.id }, oldData => {
-        if (oldData == null) return;
-        return [...oldData, newTeam];
-      });
-    }
+      trpcUtils.team.getManagerTeamsByUserId.setData(
+        { userId: user.id },
+        (oldData) => {
+          if (oldData == null) return;
+          return [...oldData, newTeam];
+        },
+      );
+    },
   });
 
   if (session.status === "loading") {
@@ -40,9 +43,10 @@ const TeamsPage: NextPage = (): JSX.Element => {
 
     createTeam.mutate({
       name: "Arsenal - test 3",
-      image: "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1200px-Arsenal_FC.svg.png",
+      image:
+        "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1200px-Arsenal_FC.svg.png",
     });
-  }
+  };
 
   return (
     <>
@@ -60,16 +64,14 @@ const TeamsPage: NextPage = (): JSX.Element => {
           <h1 className="text-lg font-bold">{user.name}'s Teams</h1>
           <div className="text-gray-500"></div>
         </div>
-        <Button onClick={handleCreateTeamClick}>
-          Create Team
-        </Button>
+        <Button onClick={handleCreateTeamClick}>Create Team</Button>
       </header>
       <main className="p-8">
-        <div className="grid grid-row-3 auto-rows-fr sm:grid-cols-3">
+        <div className="grid-row-3 grid auto-rows-fr sm:grid-cols-3">
           <ManagedTeams userId={user.id} />
           <PlayerTeams userId={user.id} />
           <div className="px-2 text-end">
-            <h3 className="text-lg font-bold pb-2">Invites</h3>
+            <h3 className="pb-2 text-lg font-bold">Invites</h3>
             <ul>
               <li>
                 <Link href={`/teams/1`}>Chelsea</Link>
@@ -83,16 +85,19 @@ const TeamsPage: NextPage = (): JSX.Element => {
 };
 
 function ManagedTeams({ userId }: { userId: string }) {
-  const { data: managedTeams, isLoading, isFetching } =
-    api.team.getManagerTeamsByUserId.useQuery({ userId });
+  const {
+    data: managedTeams,
+    isLoading,
+    isFetching,
+  } = api.team.getManagerTeamsByUserId.useQuery({ userId });
 
   if (isLoading || isFetching) {
     return <LoadingSpinner />;
   }
 
   return (
-    <div className="flex flex-col pb-4 px-2">
-      <h3 className="text-lg font-bold pb-2">Managed Teams</h3>
+    <div className="flex flex-col px-2 pb-4">
+      <h3 className="pb-2 text-lg font-bold">Managed Teams</h3>
       <ul>
         {managedTeams?.map((team) => (
           <li key={team.id} className="py-1">
@@ -105,19 +110,22 @@ function ManagedTeams({ userId }: { userId: string }) {
 }
 
 function PlayerTeams({ userId }: { userId: string }) {
-  const { data: playerTeams, isLoading, isFetching } =
-    api.team.getPlayerTeamsByUserId.useQuery({ userId });
+  const {
+    data: playerTeams,
+    isLoading,
+    isFetching,
+  } = api.team.getPlayerTeamsByUserId.useQuery({ userId });
 
   if (isLoading || isFetching) {
     return <LoadingSpinner />;
   }
 
   return (
-    <div className="flex flex-col pb-4 px-2">
-      <h3 className="text-lg font-bold pb-2">Player Teams</h3>
+    <div className="flex flex-col px-2 pb-4">
+      <h3 className="pb-2 text-lg font-bold">Player Teams</h3>
       <ul>
         {playerTeams?.length === 0 && (
-          <li className="py-6 bg-red-50 text-center border rounded border-red-100 text-red-500">
+          <li className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">
             You are not a member of any teams.
           </li>
         )}
