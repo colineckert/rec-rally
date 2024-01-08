@@ -7,7 +7,15 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-  images: { domains: ["cdn.discordapp.com"] },
+  images: {
+    domains: ["cdn.discordapp.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
 
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.

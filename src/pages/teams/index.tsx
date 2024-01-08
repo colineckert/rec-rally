@@ -67,10 +67,11 @@ const TeamsPage: NextPage = (): JSX.Element => {
         <Button onClick={handleCreateTeamClick}>Create Team</Button>
       </header>
       <main className="p-8">
+        {/* TODO use flex here */}
         <div className="grid-row-3 grid auto-rows-fr sm:grid-cols-3">
           <ManagedTeams userId={user.id} />
           <PlayerTeams userId={user.id} />
-          <div className="px-2 text-end">
+          <div className="px-2 sm:text-end">
             <h3 className="pb-2 text-lg font-bold">Invites</h3>
             <ul>
               <li>
@@ -101,7 +102,13 @@ function ManagedTeams({ userId }: { userId: string }) {
       <ul>
         {managedTeams?.map((team) => (
           <li key={team.id} className="py-1">
-            <Link href={`/teams/${team.id}`}>{team.name}</Link>
+            <Link href={`/teams/${team.id}`} className="flex items-center ">
+              <ProfileImage
+                src={team.image}
+                className="mr-3 h-8 w-8 flex-shrink-0"
+              />
+              {team.name}
+            </Link>
           </li>
         ))}
       </ul>
@@ -131,7 +138,13 @@ function PlayerTeams({ userId }: { userId: string }) {
         )}
         {playerTeams?.map((team) => (
           <li key={team.id} className="py-1">
-            <Link href={`/teams/${team.id}`}>{team.name}</Link>
+            <Link href={`/teams/${team.id}`} className="flex items-center ">
+              <ProfileImage
+                src={team.image}
+                className="mr-3 h-8 w-8 flex-shrink-0"
+              />
+              {team.name}
+            </Link>
           </li>
         ))}
       </ul>
