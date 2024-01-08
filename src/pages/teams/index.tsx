@@ -9,6 +9,7 @@ import { IconHoverEffect } from "~/components/IconHoverEffect";
 import { HiArrowLeft } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
+import { MyTeamsPosts } from "..";
 
 const TeamsPage: NextPage = (): JSX.Element => {
   const session = useSession();
@@ -53,22 +54,25 @@ const TeamsPage: NextPage = (): JSX.Element => {
       <Head>
         <title>{`Pitchup - My Teams`}</title>
       </Head>
-      <header className="sticky top-0 z-10 flex items-center border-b bg-white px-4 py-2">
-        <Link href=".." className="mr-2">
-          <IconHoverEffect>
-            <HiArrowLeft className="h-6 w-6" />
-          </IconHoverEffect>
-        </Link>
-        <ProfileImage src={user.image} className="flex-shrink-0" />
-        <div className="ml-2 flex-grow">
-          <h1 className="text-lg font-bold">{user.name}'s Teams</h1>
-          <div className="text-gray-500"></div>
+      <header className="sticky top-0 z-10 flex flex-col items-center border-b bg-white px-4 py-2 sm:flex-row">
+        <div className="flex flex-grow items-center">
+          <Link href=".." className="mr-2">
+            <IconHoverEffect>
+              <HiArrowLeft className="h-6 w-6" />
+            </IconHoverEffect>
+          </Link>
+          <ProfileImage src={user.image} className="flex-shrink-0" />
+          <div className="ml-2 flex-grow">
+            <h1 className="text-lg font-bold">{user.name}'s Teams</h1>
+            <div className="text-gray-500"></div>
+          </div>
         </div>
-        <Button onClick={handleCreateTeamClick}>Create Team</Button>
+        <Button className="m-3 sm:m-1" onClick={handleCreateTeamClick}>
+          Create Team
+        </Button>
       </header>
-      <main className="p-8">
-        {/* TODO use flex here */}
-        <div className="grid-row-3 grid auto-rows-fr sm:grid-cols-3">
+      <main>
+        <div className="grid-row-3 mb-2 grid auto-rows-fr border-b p-6 sm:grid-cols-3">
           <ManagedTeams userId={user.id} />
           <PlayerTeams userId={user.id} />
           <div className="px-2 sm:text-end">
@@ -80,6 +84,7 @@ const TeamsPage: NextPage = (): JSX.Element => {
             </ul>
           </div>
         </div>
+        <MyTeamsPosts />
       </main>
     </>
   );

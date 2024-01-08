@@ -8,7 +8,8 @@ import { useState } from "react";
 const TABS = ["Recent", "Following", "My Teams"] as const;
 
 const Home: NextPage = () => {
-  const [selectedTab, setSelectedTab] = useState<typeof TABS[number]>("Recent");
+  const [selectedTab, setSelectedTab] =
+    useState<(typeof TABS)[number]>("Recent");
   const session = useSession();
   return (
     <>
@@ -26,16 +27,18 @@ const Home: NextPage = () => {
                       : ""
                   }`}
                   onClick={() => setSelectedTab(tab)}
-                >{tab}</button>
+                >
+                  {tab}
+                </button>
               );
             })}
           </div>
         )}
       </header>
       <NewPostForm />
-      {selectedTab === 'Recent' && <RecentPosts />}
-      {selectedTab === 'Following' && <FollowingPosts />}
-      {selectedTab === 'My Teams' && <MyTeamsPosts />}
+      {selectedTab === "Recent" && <RecentPosts />}
+      {selectedTab === "Following" && <FollowingPosts />}
+      {selectedTab === "My Teams" && <MyTeamsPosts />}
     </>
   );
 };
@@ -74,7 +77,7 @@ function FollowingPosts() {
   );
 }
 
-function MyTeamsPosts() {
+export function MyTeamsPosts() {
   // TODO: implement
   const posts = api.post.infiniteFeed.useInfiniteQuery(
     { onlyFollowing: true },
