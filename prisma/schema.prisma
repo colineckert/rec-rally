@@ -14,7 +14,7 @@ datasource db {
 model Post {
   id        String   @id @default(uuid())
   userId    String
-  type       PostType @default(SOCIAL)
+  type      PostType @default(SOCIAL)
   content   String
   createdAt DateTime @default(now())
 
@@ -23,10 +23,10 @@ model Post {
 
   homeTeamId String?
   awayTeamId String?
-  homeScore  Int?     @default(0)
-  awayScore  Int?     @default(0)
+  homeScore  Int?    @default(0)
+  awayScore  Int?    @default(0)
 
-// Comment   Comment[]
+  // Comment   Comment[]
 
   @@unique([createdAt, id])
   @@index([userId])
