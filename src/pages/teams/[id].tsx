@@ -89,7 +89,7 @@ export async function getStaticProps(
   }
 
   const ssg = ssgHelper();
-  await ssg.profile.getById.prefetch({ id });
+  await ssg.team.getById.prefetch({ id });
 
   return {
     props: {

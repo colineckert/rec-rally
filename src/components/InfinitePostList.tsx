@@ -244,7 +244,7 @@ function GameRecapListItem({
   return (
     <li key={id} className="flex gap-4 border-b px-4 py-4">
       <div className="flex flex-grow flex-col">
-        <span className="text-gray-500 self-center">
+        <span className="self-center text-gray-500">
           {getFormattedDate(createdAt, "long")}
         </span>
         <div className="flex flex-row justify-center gap-14 py-4">
@@ -329,4 +329,3 @@ function HearButton({
     </button>
   );
 }
-
