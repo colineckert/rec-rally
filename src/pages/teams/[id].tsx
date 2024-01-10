@@ -18,7 +18,6 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
   const { data: team } = api.team.getById.useQuery({ id });
-  // TODO: get posts where teamId = id
   const posts = api.post.infiniteTeamFeed.useInfiniteQuery(
     { teamId: id },
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
