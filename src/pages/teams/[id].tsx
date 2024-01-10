@@ -13,10 +13,14 @@ import { IconHoverEffect } from "~/components/IconHoverEffect";
 import { HiArrowLeft } from "react-icons/hi";
 import { ProfileImage } from "~/components/ProfileImage";
 import { InfinitePostList } from "~/components/InfinitePostList";
+import { Button } from "~/components/Button";
+import { useSession } from "next-auth/react";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
+  const session = useSession();
+  const currentUserId = session.data?.user?.id;
   const { data: team } = api.team.getById.useQuery({ id });
   const posts = api.post.infiniteTeamFeed.useInfiniteQuery(
     { teamId: id },
@@ -46,6 +50,8 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             {getPlural(team.playersCount, "Player", "Players")}
           </div>
         </div>
+        {/* TODO: create modal and click handler for inviting players */}
+        {currentUserId === team.manager.id && <Button>Invite Players</Button>}
       </header>
       <main>
         <InfinitePostList
