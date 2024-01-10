@@ -7,7 +7,6 @@ import {
 } from "~/server/api/trpc";
 
 export const teamRouter = createTRPCRouter({
-  // TODO: should this be private?
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id }, ctx }) => {
@@ -16,6 +15,13 @@ export const teamRouter = createTRPCRouter({
         select: {
           name: true,
           image: true,
+          manager: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
           _count: { select: { players: true } },
           players: {
             select: {

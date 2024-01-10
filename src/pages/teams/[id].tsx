@@ -6,24 +6,23 @@ import type {
 } from "next";
 import Head from "next/head";
 import ErrorPage from "next/error";
-// import { useSession } from "next-auth/react";
 import { ssgHelper } from "~/server/api/ssgHelper";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
 import { HiArrowLeft } from "react-icons/hi";
 import { ProfileImage } from "~/components/ProfileImage";
-// import { InfinitePostList } from "~/components/InfinitePostList";
-// import { Button } from "~/components/Button";
+import { InfinitePostList } from "~/components/InfinitePostList";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
   const { data: team } = api.team.getById.useQuery({ id });
-  // const posts = api.post.infiniteProfileFeed.useInfiniteQuery(
-  //   { userId: id },
-  //   { getNextPageParam: (lastPage) => lastPage.nextCursor },
-  // );
+  // TODO: get posts where teamId = id
+  const posts = api.post.infiniteTeamFeed.useInfiniteQuery(
+    { teamId: id },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor },
+  );
 
   if (team?.name == null) return <ErrorPage statusCode={404} />;
 
@@ -41,32 +40,31 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <ProfileImage src={team.image} className="flex-shrink-0" />
         <div className="ml-2 flex-grow">
           <h1 className="text-lg font-bold">{team.name}</h1>
-          {/* <div className="text-gray-500">
-            {profile.postsCount}{" "}
-            {getPlural(profile.postsCount, "Post", "Posts")} -{" "}
-            {profile.followersCount}{" "}
-            {getPlural(profile.followersCount, "Follower", "Followers")} -{" "}
-            {profile.followsCount} Following
-          </div> */}
+          <div className="text-gray-500">
+            Manager: Colin Eckert{" - "}
+            {team.playersCount}{" "}
+            {getPlural(team.playersCount, "Player", "Players")}
+            {/* {team.manager.name} */}
+          </div>
         </div>
       </header>
       <main>
-        {/* <InfinitePostList
-          posts={[]}
+        <InfinitePostList
+          posts={posts.data?.pages.flatMap((page) => page.posts)}
           isError={posts.isError}
           isLoading={posts.isLoading}
           hasMore={posts.hasNextPage}
           fetchNewPosts={posts.fetchNextPage}
-        /> */}
+        />
       </main>
     </>
   );
 };
 
-// const pluralRules = new Intl.PluralRules();
-// function getPlural(number: number, singular: string, plural: string) {
-//   return pluralRules.select(number) === "one" ? singular : plural;
-// }
+const pluralRules = new Intl.PluralRules();
+function getPlural(number: number, singular: string, plural: string) {
+  return pluralRules.select(number) === "one" ? singular : plural;
+}
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {
