@@ -40,10 +40,10 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <div className="ml-2 flex-grow">
           <h1 className="text-lg font-bold">{team.name}</h1>
           <div className="text-gray-500">
-            Manager: Colin Eckert{" - "}
+            Manager: {team.manager.name}
+            {" - "}
             {team.playersCount}{" "}
             {getPlural(team.playersCount, "Player", "Players")}
-            {/* {team.manager.name} */}
           </div>
         </div>
       </header>

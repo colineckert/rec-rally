@@ -38,6 +38,11 @@ export const teamRouter = createTRPCRouter({
       return {
         name: team.name,
         image: team.image,
+        manager: {
+          id: team.manager.id,
+          name: team.manager.name,
+          image: team.manager.image,
+        },
         playersCount: team._count.players,
         players: team.players.map((player) => ({
           id: player.id,
