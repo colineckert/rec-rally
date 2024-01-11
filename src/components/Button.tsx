@@ -21,7 +21,7 @@ export function Button({
     : "bg-green-500 hover:bg-green-400 focus-visible:bg-green-400";
   return (
     <button
-      className={`rounded-full text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${sizeClasses} ${colorClasses} ${className}`}
+      className={`rounded-md text-sm font-medium text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${sizeClasses} ${colorClasses} ${className}`}
       {...props}
     ></button>
   );

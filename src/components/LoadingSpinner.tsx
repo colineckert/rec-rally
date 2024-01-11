@@ -1,4 +1,4 @@
-import { VscRefresh } from "react-icons/vsc";
+import { HiOutlineRefresh } from "react-icons/hi";
 
 type LoadingSpinnerProps = {
   big?: boolean;
@@ -9,8 +9,7 @@ export function LoadingSpinner({ big = false }: LoadingSpinnerProps) {
 
   return (
     <div className="flex justify-center p-2">
-      <VscRefresh className={`animate-spin ${sizeClasses}`} />
+      <HiOutlineRefresh className={`animate-spin ${sizeClasses}`} />
     </div>
   );
 }
-

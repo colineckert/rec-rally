@@ -13,8 +13,8 @@ import { IconHoverEffect } from "~/components/IconHoverEffect";
 import { HiArrowLeft } from "react-icons/hi";
 import { ProfileImage } from "~/components/ProfileImage";
 import { InfinitePostList } from "~/components/InfinitePostList";
-import { Button } from "~/components/Button";
 import { useSession } from "next-auth/react";
+import ManageTeamDropdown from "~/components/ManageTeamDropdown";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -50,8 +50,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             {getPlural(team.playersCount, "Player", "Players")}
           </div>
         </div>
-        {/* TODO: create modal and click handler for inviting players */}
-        {currentUserId === team.manager.id && <Button>Invite Players</Button>}
+        {currentUserId === team.manager.id && <ManageTeamDropdown />}
       </header>
       <main>
         <InfinitePostList
