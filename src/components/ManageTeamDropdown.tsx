@@ -1,5 +1,5 @@
 import { Menu, Transition } from "@headlessui/react";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment } from "react";
 import { HiChevronDown } from "react-icons/hi";
 
 export default function ManageTeamDropdown() {
