@@ -17,7 +17,7 @@ const TeamsPage: NextPage = (): JSX.Element => {
   const trpcUtils = api.useUtils();
   const createTeam = api.team.create.useMutation({
     onSuccess: (newTeam) => {
-      console.log("Success", newTeam);
+      console.log("Team Created:", newTeam);
 
       trpcUtils.team.getManagerTeamsByUserId.setData(
         { userId: user.id },

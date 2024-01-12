@@ -1,8 +1,19 @@
 import { Menu, Transition } from "@headlessui/react";
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { HiChevronDown } from "react-icons/hi";
+import DeleteTeamModal from "./DeleteTeamModal";
 
-export default function ManageTeamDropdown() {
+type ManageTeamDropdownProps = {
+  teamId: string;
+  teamName: string;
+};
+
+export default function ManageTeamDropdown({
+  teamId,
+  teamName,
+}: ManageTeamDropdownProps) {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   return (
     <div className="w-56 text-right">
       <Menu as="div" className="relative inline-block text-left">
@@ -121,6 +132,7 @@ export default function ManageTeamDropdown() {
               <Menu.Item>
                 {({ active }) => (
                   <button
+                    onClick={() => setIsDeleteModalOpen(true)}
                     className={`${
                       active ? "bg-gray-200 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -144,6 +156,12 @@ export default function ManageTeamDropdown() {
           </Menu.Items>
         </Transition>
       </Menu>
+      <DeleteTeamModal
+        teamId={teamId}
+        teamName={teamName}
+        isOpen={isDeleteModalOpen}
+        closeModal={() => setIsDeleteModalOpen(false)}
+      />
     </div>
   );
 }

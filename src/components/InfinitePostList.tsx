@@ -181,16 +181,14 @@ function PostListItem({
 function GameRecapListItem({
   id,
   user,
-  homeTeamId,
-  awayTeamId,
+  // homeTeamId,
+  // awayTeamId,
   homeScore,
   awayScore,
   createdAt,
   likeCount,
   likedByMe,
 }: Post) {
-  console.log({ homeTeamId, awayTeamId });
-
   const trpcUtils = api.useUtils();
   const toggleLike = api.post.toggleLike.useMutation({
     onSuccess: async ({ addedLike }) => {

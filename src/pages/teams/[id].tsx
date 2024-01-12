@@ -50,7 +50,9 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             {getPlural(team.playersCount, "Player", "Players")}
           </div>
         </div>
-        {currentUserId === team.manager.id && <ManageTeamDropdown />}
+        {currentUserId === team.manager.id && (
+          <ManageTeamDropdown teamId={id} teamName={team.name} />
+        )}
       </header>
       <main>
         <InfinitePostList
@@ -85,7 +87,7 @@ export async function getStaticProps(
   if (id == null) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/teams",
       },
     };
   }
