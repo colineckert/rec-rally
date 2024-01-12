@@ -1,5 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { useRouter } from "next/router";
 import { Fragment } from "react";
+import { api } from "~/utils/api";
 
 type DeleteTeamModalProps = {
   teamId: string;
@@ -14,9 +16,23 @@ export default function DeleteTeamModal({
   isOpen,
   closeModal,
 }: DeleteTeamModalProps) {
-  // TODO: implement delete team mutation
+  const router = useRouter();
+  const deleteTeam = api.team.delete.useMutation({
+    onSuccess: () => {
+      router
+        .push("/teams")
+        .then(() => {
+          router.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  });
+
   function handleDeleteTeam() {
-    console.log("delete team", teamId);
+    const deletedTeam = deleteTeam.mutate({ id: teamId });
+    console.log("Team Deleted", deletedTeam);
     closeModal();
   }
 
