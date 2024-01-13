@@ -10,6 +10,7 @@ import { HiArrowLeft } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
+import { HiChevronRight } from "react-icons/hi";
 
 const TeamsPage: NextPage = (): JSX.Element => {
   const session = useSession();
@@ -104,16 +105,31 @@ function ManagedTeams({ userId }: { userId: string }) {
   return (
     <div className="flex flex-col px-2 pb-4">
       <h3 className="pb-2 text-lg font-bold">Managed Teams</h3>
-      <ul>
+      <ul role="list">
         {managedTeams?.map((team) => (
-          <li key={team.id} className="py-1">
-            <Link href={`/teams/${team.id}`} className="flex items-center ">
+          <li
+            key={team.id}
+            className="group/item my-2 rounded-md border hover:bg-slate-100"
+          >
+            <div className="flex items-center justify-between p-2">
               <ProfileImage
                 src={team.image}
                 className="mr-3 h-8 w-8 flex-shrink-0"
               />
-              {team.name}
-            </Link>
+              <div className="flex-grow">
+                <span>{team.name}</span>
+                <p className="text-sm text-gray-500">Manager: You</p>
+              </div>
+              <Link
+                href={`/teams/${team.id}`}
+                className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
+              >
+                <span className="mr-1 text-sm group-hover/edit:text-gray-700">
+                  Visit
+                </span>
+                <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
+              </Link>
+            </div>
           </li>
         ))}
       </ul>
@@ -135,21 +151,36 @@ function PlayerTeams({ userId }: { userId: string }) {
   return (
     <div className="flex flex-col px-2 pb-4">
       <h3 className="pb-2 text-lg font-bold">Player Teams</h3>
-      <ul>
+      <ul role="list">
         {playerTeams?.length === 0 && (
           <li className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">
             You are not a member of any teams.
           </li>
         )}
         {playerTeams?.map((team) => (
-          <li key={team.id} className="py-1">
-            <Link href={`/teams/${team.id}`} className="flex items-center ">
+          <li
+            key={team.id}
+            className="group/item my-2 rounded-md border hover:bg-slate-100"
+          >
+            <div className="flex items-center justify-between p-2">
               <ProfileImage
                 src={team.image}
                 className="mr-3 h-8 w-8 flex-shrink-0"
               />
-              {team.name}
-            </Link>
+              <div className="flex-grow">
+                <span>{team.name}</span>
+                <p className="text-sm text-gray-500">Manager: You</p>
+              </div>
+              <Link
+                href={`/teams/${team.id}`}
+                className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
+              >
+                <span className="mr-1 text-sm group-hover/edit:text-gray-700">
+                  Visit
+                </span>
+                <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
+              </Link>
+            </div>
           </li>
         ))}
       </ul>
