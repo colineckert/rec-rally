@@ -41,7 +41,7 @@ export default function ManageTeamDropdown({
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? "bg-gray-200 text-black" : "text-gray-900"
+                      active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
@@ -63,7 +63,7 @@ export default function ManageTeamDropdown({
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? "bg-gray-200 text-black" : "text-gray-900"
+                      active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
@@ -87,7 +87,7 @@ export default function ManageTeamDropdown({
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? "bg-gray-200 text-black" : "text-gray-900"
+                      active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
@@ -109,7 +109,7 @@ export default function ManageTeamDropdown({
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? "bg-gray-200 text-black" : "text-gray-900"
+                      active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
@@ -134,7 +134,7 @@ export default function ManageTeamDropdown({
                   <button
                     onClick={() => setIsDeleteModalOpen(true)}
                     className={`${
-                      active ? "bg-gray-200 text-black" : "text-gray-900"
+                      active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
