@@ -44,9 +44,9 @@ const TeamsPage: NextPage = (): JSX.Element => {
     console.log("***Create a team click***");
 
     createTeam.mutate({
-      name: "Arsenal - test 2",
+      name: "Chelsea",
       image:
-        "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1200px-Arsenal_FC.svg.png",
+        "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png",
     });
   };
 

@@ -131,4 +131,23 @@ export const teamRouter = createTRPCRouter({
 
       return team;
     }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        image: z.string().nullable(),
+      }),
+    )
+    .mutation(async ({ input: { id, name, image }, ctx }) => {
+      const team = await ctx.db.team.update({
+        where: { id },
+        data: {
+          name,
+          image,
+        },
+      });
+
+      return team;
+    }),
 });

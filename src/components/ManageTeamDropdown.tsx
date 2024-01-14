@@ -1,18 +1,22 @@
 import { Menu, Transition } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
 import { HiChevronDown } from "react-icons/hi";
-import DeleteTeamModal from "./DeleteTeamModal";
+import DeleteTeamModal from "./team-modal/DeleteTeam";
+import EditTeamModal from "./team-modal/EditTeam";
 
 type ManageTeamDropdownProps = {
   teamId: string;
   teamName: string;
+  teamImageUrl: string | null;
 };
 
 export default function ManageTeamDropdown({
   teamId,
   teamName,
+  teamImageUrl,
 }: ManageTeamDropdownProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   return (
     <div className="w-56 text-right">
@@ -40,6 +44,7 @@ export default function ManageTeamDropdown({
               <Menu.Item>
                 {({ active }) => (
                   <button
+                    onClick={() => setIsEditModalOpen(true)}
                     className={`${
                       active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -83,7 +88,7 @@ export default function ManageTeamDropdown({
               </Menu.Item>
             </div>
             <div className="px-1 py-1">
-              <Menu.Item>
+              {/* <Menu.Item>
                 {({ active }) => (
                   <button
                     className={`${
@@ -104,7 +109,7 @@ export default function ManageTeamDropdown({
                     Archive
                   </button>
                 )}
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item>
                 {({ active }) => (
                   <button
@@ -123,7 +128,7 @@ export default function ManageTeamDropdown({
                         aria-hidden="true"
                       />
                     )}
-                    Move
+                    Change League
                   </button>
                 )}
               </Menu.Item>
@@ -161,6 +166,13 @@ export default function ManageTeamDropdown({
         teamName={teamName}
         isOpen={isDeleteModalOpen}
         closeModal={() => setIsDeleteModalOpen(false)}
+      />
+      <EditTeamModal
+        teamId={teamId}
+        teamName={teamName}
+        teamImageUrl={teamImageUrl}
+        isOpen={isEditModalOpen}
+        closeModal={() => setIsEditModalOpen(false)}
       />
     </div>
   );
@@ -250,67 +262,67 @@ function DuplicateActiveIcon(props: React.ComponentProps<"svg">) {
   );
 }
 
-function ArchiveInactiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="8"
-        width="10"
-        height="8"
-        fill="#EDE9FE"
-        stroke="#23C55F"
-        strokeWidth="2"
-      />
-      <rect
-        x="4"
-        y="4"
-        width="12"
-        height="4"
-        fill="#EDE9FE"
-        stroke="#23C55F"
-        strokeWidth="2"
-      />
-      <path d="M8 12H12" stroke="#23C55F" strokeWidth="2" />
-    </svg>
-  );
-}
+// function ArchiveInactiveIcon(props: React.ComponentProps<"svg">) {
+//   return (
+//     <svg
+//       {...props}
+//       viewBox="0 0 20 20"
+//       fill="none"
+//       xmlns="http://www.w3.org/2000/svg"
+//     >
+//       <rect
+//         x="5"
+//         y="8"
+//         width="10"
+//         height="8"
+//         fill="#EDE9FE"
+//         stroke="#23C55F"
+//         strokeWidth="2"
+//       />
+//       <rect
+//         x="4"
+//         y="4"
+//         width="12"
+//         height="4"
+//         fill="#EDE9FE"
+//         stroke="#23C55F"
+//         strokeWidth="2"
+//       />
+//       <path d="M8 12H12" stroke="#23C55F" strokeWidth="2" />
+//     </svg>
+//   );
+// }
 
-function ArchiveActiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="8"
-        width="10"
-        height="8"
-        fill="#23C55F"
-        stroke="#8FD1A8"
-        strokeWidth="2"
-      />
-      <rect
-        x="4"
-        y="4"
-        width="12"
-        height="4"
-        fill="#23C55F"
-        stroke="#8FD1A8"
-        strokeWidth="2"
-      />
-      <path d="M8 12H12" stroke="#8FD1A8" strokeWidth="2" />
-    </svg>
-  );
-}
+// function ArchiveActiveIcon(props: React.ComponentProps<"svg">) {
+//   return (
+//     <svg
+//       {...props}
+//       viewBox="0 0 20 20"
+//       fill="none"
+//       xmlns="http://www.w3.org/2000/svg"
+//     >
+//       <rect
+//         x="5"
+//         y="8"
+//         width="10"
+//         height="8"
+//         fill="#23C55F"
+//         stroke="#8FD1A8"
+//         strokeWidth="2"
+//       />
+//       <rect
+//         x="4"
+//         y="4"
+//         width="12"
+//         height="4"
+//         fill="#23C55F"
+//         stroke="#8FD1A8"
+//         strokeWidth="2"
+//       />
+//       <path d="M8 12H12" stroke="#8FD1A8" strokeWidth="2" />
+//     </svg>
+//   );
+// }
 
 function MoveInactiveIcon(props: React.ComponentProps<"svg">) {
   return (
