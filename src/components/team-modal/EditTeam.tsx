@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { api } from "~/utils/api";
 
-type DeleteTeamModalProps = {
+type EditTeamModalProps = {
   teamId: string;
   teamName: string;
   teamImageUrl: string | null;
@@ -17,7 +17,7 @@ export default function EditTeamModal({
   teamImageUrl,
   isOpen,
   closeModal,
-}: DeleteTeamModalProps) {
+}: EditTeamModalProps) {
   const router = useRouter();
   const edtiTeam = api.team.update.useMutation({
     onSuccess: () => {
