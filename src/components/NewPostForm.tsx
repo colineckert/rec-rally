@@ -87,7 +87,7 @@ function Form() {
           style={{ height: 0 }}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className="flex-grow resize-none overflow-hidden p-4 text-lg outline-none"
+          className="flex-grow resize-none overflow-hidden border-none p-4 text-lg outline-none focus:ring-0"
           placeholder="What's happening?"
         />
       </div>
