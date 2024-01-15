@@ -29,16 +29,16 @@ export default function CreateTeamModal({
     },
   });
 
-  function handleCreateTeam(event: SyntheticEvent<HTMLFormElement>) {
+  async function handleCreateTeam(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    // TODO: Add validation
     const name = (event.target as any).teamName.value;
     const image = (event.target as any).teamImageUrl.value || null;
     const description = (event.target as any).description.value || null;
+    // TODO: leagueId
 
-    const updatedTeam = createTeam.mutate({ name, image, description });
-
-    console.log("Team Updated", updatedTeam);
+    await createTeam.mutateAsync({ name, image, description });
     closeModal();
   }
 
@@ -157,6 +157,7 @@ export default function CreateTeamModal({
                     </button>
                     <button
                       type="submit"
+                      disabled={createTeam.isLoading}
                       className="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                     >
                       Save
