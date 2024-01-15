@@ -21,14 +21,9 @@ export default function DeleteTeamModal({
   const router = useRouter();
   const deleteTeam = api.team.delete.useMutation({
     onSuccess: () => {
-      router
-        .push("/teams")
-        .then(() => {
-          router.reload();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      router.push("/teams").catch((err) => {
+        console.log(err);
+      });
     },
   });
 
