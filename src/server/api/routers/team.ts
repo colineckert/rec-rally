@@ -108,14 +108,16 @@ export const teamRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         image: z.string().nullable(),
+        description: z.string().nullable(),
       }),
     )
-    .mutation(async ({ input: { name, image }, ctx }) => {
+    .mutation(async ({ input: { name, image, description }, ctx }) => {
       const currentUserId = ctx.session.user.id;
       const team = await ctx.db.team.create({
         data: {
           name,
           image,
+          description,
           managerId: currentUserId,
         },
       });

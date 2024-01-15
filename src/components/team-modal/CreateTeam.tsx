@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, type SyntheticEvent } from "react";
 import { api } from "~/utils/api";
 
 type CreateTeamModalProps = {
@@ -28,11 +29,15 @@ export default function CreateTeamModal({
     },
   });
 
-  function handleCreateTeam() {
-    const updatedTeam = createTeam.mutate({
-      name: "New Team",
-      image: null,
-    });
+  function handleCreateTeam(event: SyntheticEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const name = (event.target as any).teamName.value;
+    const image = (event.target as any).teamImageUrl.value || null;
+    const description = (event.target as any).description.value || null;
+
+    const updatedTeam = createTeam.mutate({ name, image, description });
+
     console.log("Team Updated", updatedTeam);
     closeModal();
   }
@@ -72,27 +77,92 @@ export default function CreateTeamModal({
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    Give your new team a name and an image URL (optional) to get
-                    started.
+                    Give your new team a name, image URL (optional), and
+                    description (optional) to get started.
                   </p>
                 </div>
-
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    className="mr-2 inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
-                    onClick={closeModal}
-                  >
-                    Create
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-                    onClick={closeModal}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                <form onSubmit={handleCreateTeam}>
+                  <div className="space-y-12">
+                    <div className="border-b border-gray-900/10 pb-12">
+                      <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                        <div className="sm:col-span-4">
+                          <label
+                            htmlFor="teamName"
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                          >
+                            Name
+                          </label>
+                          <div className="mt-2">
+                            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-green-600 sm:max-w-md">
+                              <input
+                                required
+                                type="text"
+                                name="teamName"
+                                id="teamName"
+                                className="block flex-1 border-0 bg-transparent py-2 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                                placeholder="Arsenal"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="sm:col-span-4">
+                          <label
+                            htmlFor="teamImageUrl"
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                          >
+                            Image URL
+                          </label>
+                          <div className="mt-2">
+                            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-green-600 sm:max-w-md">
+                              <input
+                                type="text"
+                                name="teamImageUrl"
+                                id="teamImageUrl"
+                                className="block flex-1 border-0 bg-transparent py-2 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                                placeholder="https://example.com/image.png"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-span-full">
+                          <label
+                            htmlFor="description"
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                          >
+                            Description
+                          </label>
+                          <div className="mt-2">
+                            <textarea
+                              id="description"
+                              name="description"
+                              rows={3}
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                              defaultValue={""}
+                            />
+                          </div>
+                          <p className="mt-3 text-sm leading-6 text-gray-600">
+                            Write a few sentences about your team.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-6 flex items-center justify-end gap-x-6">
+                    <button
+                      type="button"
+                      onClick={closeModal}
+                      className="text-sm font-semibold leading-6 text-gray-900"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
               </Dialog.Panel>
             </Transition.Child>
           </div>
