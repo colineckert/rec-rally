@@ -19,14 +19,14 @@ export default function EditTeamModal({
   closeModal,
 }: EditTeamModalProps) {
   const router = useRouter();
-  const edtiTeam = api.team.update.useMutation({
+  const editTeam = api.team.update.useMutation({
     onSuccess: () => {
       router.reload();
     },
   });
 
   function handleUpdateTeam() {
-    const updatedTeam = edtiTeam.mutate({
+    const updatedTeam = editTeam.mutate({
       id: teamId,
       name: teamName,
       image: teamImageUrl ?? null,
