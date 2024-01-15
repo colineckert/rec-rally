@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import ErrorPage from "next/error";
@@ -11,24 +12,11 @@ import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
 import { HiChevronRight } from "react-icons/hi";
+import CreateTeamModal from "~/components/team-modal/CreateTeam";
 
 const TeamsPage: NextPage = (): JSX.Element => {
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const session = useSession();
-
-  const trpcUtils = api.useUtils();
-  const createTeam = api.team.create.useMutation({
-    onSuccess: (newTeam) => {
-      console.log("Team Created:", newTeam);
-
-      trpcUtils.team.getManagerTeamsByUserId.setData(
-        { userId: user.id },
-        (oldData) => {
-          if (oldData == null) return;
-          return [...oldData, newTeam];
-        },
-      );
-    },
-  });
 
   if (session.status === "loading") {
     return <LoadingSpinner />;
@@ -39,16 +27,6 @@ const TeamsPage: NextPage = (): JSX.Element => {
   }
 
   const { user } = session.data;
-
-  const handleCreateTeamClick = () => {
-    console.log("***Create a team click***");
-
-    createTeam.mutate({
-      name: "Chelsea",
-      image:
-        "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png",
-    });
-  };
 
   return (
     <>
@@ -68,7 +46,7 @@ const TeamsPage: NextPage = (): JSX.Element => {
             <div className="text-gray-500"></div>
           </div>
         </div>
-        <Button className="m-3 sm:m-1" onClick={handleCreateTeamClick}>
+        <Button className="m-3 sm:m-1" onClick={() => setCreateModalOpen(true)}>
           Create Team
         </Button>
       </header>
@@ -97,6 +75,11 @@ const TeamsPage: NextPage = (): JSX.Element => {
         </div>
         <MyTeamsPosts />
       </main>
+      <CreateTeamModal
+        managerId={user.id}
+        isOpen={createModalOpen}
+        closeModal={() => setCreateModalOpen(false)}
+      />
     </>
   );
 };

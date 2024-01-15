@@ -107,7 +107,7 @@ export const teamRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        image: z.string(),
+        image: z.string().nullable(),
       }),
     )
     .mutation(async ({ input: { name, image }, ctx }) => {
