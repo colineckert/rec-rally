@@ -6,7 +6,7 @@ import { Button } from "~/components/Button";
 import { ProfileImage } from "~/components/ProfileImage";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
-import { HiArrowLeft } from "react-icons/hi";
+import { HiArrowLeft, HiCheck, HiX } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
@@ -76,11 +76,21 @@ const TeamsPage: NextPage = (): JSX.Element => {
         <div className="grid-row-3 mb-2 grid auto-rows-fr border-b p-6 sm:grid-cols-3">
           <ManagedTeams userId={user.id} />
           <PlayerTeams userId={user.id} />
-          <div className="px-2 sm:text-end">
+          <div className="px-2">
             <h3 className="pb-2 text-lg font-bold">Invites</h3>
             <ul>
-              <li>
-                <Link href={`/teams/1`}>Chelsea</Link>
+              <li className="my-2 rounded-md border hover:bg-slate-100">
+                <div className="flex items-center justify-between p-2">
+                  <Link className="flex-grow pl-1" href={`/teams/1`}>
+                    Chelsea
+                  </Link>
+                  <Button className="mr-2">
+                    <HiCheck />
+                  </Button>
+                  <Button className="bg-red-500 p-1 hover:bg-red-400 focus-visible:bg-red-400">
+                    <HiX />
+                  </Button>
+                </div>
               </li>
             </ul>
           </div>
@@ -124,8 +134,9 @@ function ManagedTeams({ userId }: { userId: string }) {
                 href={`/teams/${team.id}`}
                 className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
               >
+                {/* TODO: optimize for mobile */}
                 <span className="mr-1 text-sm group-hover/edit:text-gray-700">
-                  Visit
+                  Manage
                 </span>
                 <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
               </Link>
