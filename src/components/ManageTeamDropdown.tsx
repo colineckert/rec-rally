@@ -3,18 +3,16 @@ import React, { Fragment, useState } from "react";
 import { HiChevronDown } from "react-icons/hi";
 import DeleteTeamModal from "./team-modal/DeleteTeam";
 import EditTeamModal from "./team-modal/EditTeam";
+import type { inferProcedureOutput } from "@trpc/server";
+import type { AppRouter } from "~/server/api/root";
 
 type ManageTeamDropdownProps = {
-  teamId: string;
-  teamName: string;
-  teamImageUrl: string | null;
+  team: inferProcedureOutput<AppRouter["team"]["getById"]>;
 };
 
-export default function ManageTeamDropdown({
-  teamId,
-  teamName,
-  teamImageUrl,
-}: ManageTeamDropdownProps) {
+export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
+  if (!team) return null;
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -162,15 +160,13 @@ export default function ManageTeamDropdown({
         </Transition>
       </Menu>
       <DeleteTeamModal
-        teamId={teamId}
-        teamName={teamName}
+        teamId={team.id}
+        teamName={team.name}
         isOpen={isDeleteModalOpen}
         closeModal={() => setIsDeleteModalOpen(false)}
       />
       <EditTeamModal
-        teamId={teamId}
-        teamName={teamName}
-        teamImageUrl={teamImageUrl}
+        team={team}
         isOpen={isEditModalOpen}
         closeModal={() => setIsEditModalOpen(false)}
       />

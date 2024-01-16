@@ -51,11 +51,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </div>
         </div>
         {currentUserId === team.manager.id && (
-          <ManageTeamDropdown
-            teamId={id}
-            teamName={team.name}
-            teamImageUrl={team.image ?? null}
-          />
+          <ManageTeamDropdown team={team} />
         )}
       </header>
       <main>

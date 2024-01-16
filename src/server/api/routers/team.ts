@@ -15,6 +15,7 @@ export const teamRouter = createTRPCRouter({
         select: {
           name: true,
           image: true,
+          description: true,
           manager: {
             select: {
               id: true,
@@ -36,8 +37,10 @@ export const teamRouter = createTRPCRouter({
       if (team == null) return;
 
       return {
+        id,
         name: team.name,
         image: team.image,
+        description: team.description,
         manager: {
           id: team.manager.id,
           name: team.manager.name,
@@ -139,14 +142,18 @@ export const teamRouter = createTRPCRouter({
         id: z.string(),
         name: z.string(),
         image: z.string().nullable(),
+        description: z.string().nullable(),
       }),
     )
-    .mutation(async ({ input: { id, name, image }, ctx }) => {
+    .mutation(async ({ input: { id, name, image, description }, ctx }) => {
+      const currentUserId = ctx.session.user.id;
       const team = await ctx.db.team.update({
         where: { id },
         data: {
           name,
           image,
+          description,
+          managerId: currentUserId,
         },
       });
 
