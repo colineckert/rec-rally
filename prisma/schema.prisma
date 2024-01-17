@@ -116,7 +116,7 @@ model VerificationToken {
 }
 
 model Team {
-  id          String   @id @unique @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   image       String?
   description String?
@@ -134,7 +134,7 @@ model Team {
 }
 
 model League {
-  id          String   @id @unique @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String?
   createdAt   DateTime @default(now())
@@ -148,7 +148,7 @@ model League {
 }
 
 model Game {
-  id         String   @id @unique @default(cuid())
+  id         String   @id @default(cuid())
   homeTeamId String
   awayTeamId String
   homeScore  Int?     @default(0)
