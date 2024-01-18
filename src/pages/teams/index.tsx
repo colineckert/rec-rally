@@ -118,7 +118,7 @@ function ManagedTeams({ userId }: { userId: string }) {
                 className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
               >
                 {/* TODO: optimize for mobile */}
-                <span className="mr-1 text-sm group-hover/edit:text-gray-700">
+                <span className="text-sm group-hover/edit:text-gray-700">
                   Manage
                 </span>
                 <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
@@ -169,7 +169,7 @@ function PlayerTeams({ userId }: { userId: string }) {
                 href={`/teams/${team.id}`}
                 className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
               >
-                <span className="mr-1 text-sm group-hover/edit:text-gray-700">
+                <span className="text-sm group-hover/edit:text-gray-700">
                   Visit
                 </span>
                 <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />

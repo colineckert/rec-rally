@@ -49,9 +49,11 @@ async function main() {
       id: teamOneId,
     },
     create: {
-      id: playerThreeId,
+      id: teamOneId,
       name: "Chelsea",
       managerId: playerOneId,
+      image:
+        "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png",
       players: {
         connect: [
           { id: "clpfuqvex0000im3vau7gdkja" },
@@ -60,10 +62,7 @@ async function main() {
         ],
       },
     },
-    update: {
-      image:
-        "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png",
-    },
+    update: {},
   });
 
   console.log({ team });
