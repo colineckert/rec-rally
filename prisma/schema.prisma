@@ -140,8 +140,8 @@ model League {
   createdAt   DateTime @default(now())
 
   managerId String?
-  manager   User?   @relation(fields: [managerId], references: [id], onDelete: Cascade)
   teams     Team[]
+  players   User[]
 
   @@unique([name, id])
   @@index([managerId])
