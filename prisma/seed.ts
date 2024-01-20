@@ -65,7 +65,31 @@ async function main() {
     update: {},
   });
 
-  console.log({ team });
+  console.log("Team:", { team });
+
+  const leagueOneId = "cl9ebqhxk00003b600tymyl01";
+  const league = await db.league.upsert({
+    where: {
+      id: leagueOneId,
+    },
+    create: {
+      id: leagueOneId,
+      name: "Premier League",
+      teams: {
+        connect: [{ id: teamOneId }],
+      },
+      players: {
+        connect: [
+          { id: "clpfuqvex0000im3vau7gdkja" },
+          { id: player1.id },
+          { id: player2.id },
+        ],
+      },
+    },
+    update: {},
+  });
+
+  console.log("League:", { league });
 }
 
 main()
