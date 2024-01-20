@@ -34,24 +34,30 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <Head>
         <title>{`Pitchup - ${team.name}`}</title>
       </Head>
-      <header className="sticky top-0 z-10 flex items-center border-b bg-white px-4 py-2">
-        <Link href="/teams" className="mr-2">
-          <IconHoverEffect>
-            <HiArrowLeft className="h-6 w-6" />
-          </IconHoverEffect>
-        </Link>
-        <ProfileImage src={team.image} className="flex-shrink-0" />
-        <div className="ml-2 flex-grow">
-          <h1 className="text-lg font-bold">{team.name}</h1>
-          <div className="text-gray-500">
-            Manager: {team.manager.name}
-            {" - "}
-            {team.playersCount}{" "}
-            {getPlural(team.playersCount, "Player", "Players")}
+      <header className="sticky top-0 z-10 flex flex-col items-center border-b bg-white px-3 py-2 sm:flex-row">
+        <div className="flex flex-grow flex-row items-center">
+          <Link href="/teams" className="mr-2">
+            <IconHoverEffect>
+              <HiArrowLeft className="h-6 w-6" />
+            </IconHoverEffect>
+          </Link>
+          <div className="flex items-center">
+            <ProfileImage src={team.image} className="flex-shrink-0" />
+            <div className="ml-2">
+              <h1 className="text-lg font-bold">{team.name}</h1>
+              <div className="text-gray-500">
+                Manager: {team.manager.name}
+                {" - "}
+                {team.playersCount}{" "}
+                {getPlural(team.playersCount, "Player", "Players")}
+              </div>
+            </div>
           </div>
         </div>
         {currentUserId === team.manager.id && (
-          <ManageTeamDropdown team={team} />
+          <div className="py-3 sm:py-0">
+            <ManageTeamDropdown team={team} />
+          </div>
         )}
       </header>
       <main>

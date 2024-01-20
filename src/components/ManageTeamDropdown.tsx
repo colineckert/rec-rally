@@ -17,7 +17,7 @@ export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   return (
-    <div className="w-56 text-right">
+    <div className="text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex w-full justify-center rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400 focus:outline-none focus-visible:bg-green-400 focus-visible:ring-2 focus-visible:ring-white/75">

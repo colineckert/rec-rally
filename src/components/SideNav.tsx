@@ -25,7 +25,7 @@ export function SideNav() {
   };
 
   return (
-    <nav className="sticky top-0 px-4 py-4">
+    <nav className="sticky top-0 px-2 py-4">
       <ul className="flex flex-col items-start gap-2 whitespace-nowrap">
         <li>
           <Link href="/">
@@ -35,7 +35,11 @@ export function SideNav() {
                   isSelected("/") ? "font-bold" : ""
                 }`}
               >
-                {isSelected('/') ? <HiHome className="h-8 w-8" /> : <HiOutlineHome className="h-8 w-8" />}
+                {isSelected("/") ? (
+                  <HiHome className="h-8 w-8" />
+                ) : (
+                  <HiOutlineHome className="h-8 w-8" />
+                )}
                 <span className="hidden text-lg md:inline">Home</span>
               </span>
             </IconHoverEffect>

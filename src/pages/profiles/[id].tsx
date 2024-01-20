@@ -48,7 +48,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <Head>
         <title>{`Pitchup - ${profile.name}`}</title>
       </Head>
-      <header className="sticky top-0 z-10 flex items-center border-b bg-white px-4 py-2">
+      <header className="sticky top-0 z-10 flex items-center border-b bg-white px-3 py-2">
         <Link href=".." className="mr-2">
           <IconHoverEffect>
             <HiArrowLeft className="h-6 w-6" />

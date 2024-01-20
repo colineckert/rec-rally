@@ -33,22 +33,23 @@ const TeamsPage: NextPage = (): JSX.Element => {
       <Head>
         <title>{`Pitchup - My Teams`}</title>
       </Head>
-      <header className="sticky top-0 z-10 flex flex-col items-center border-b bg-white px-4 py-2 sm:flex-row">
-        <div className="flex flex-grow items-center">
+      <header className="sticky top-0 z-10 flex flex-col items-center border-b bg-white px-3 py-2 sm:flex-row">
+        <div className="flex flex-grow flex-row items-center">
           <Link href=".." className="mr-2">
             <IconHoverEffect>
               <HiArrowLeft className="h-6 w-6" />
             </IconHoverEffect>
           </Link>
-          <ProfileImage src={user.image} className="flex-shrink-0" />
-          <div className="ml-2 flex-grow">
-            <h1 className="text-lg font-bold">{user.name}'s Teams</h1>
-            <div className="text-gray-500"></div>
+          <div className="flex items-center">
+            <ProfileImage src={user.image} className="flex-shrink-0" />
+            <div className="ml-2">
+              <h1 className="text-lg font-bold">{user.name}'s Teams</h1>
+            </div>
           </div>
         </div>
-        <Button className="m-3 sm:m-1" onClick={() => setCreateModalOpen(true)}>
-          Create Team
-        </Button>
+        <div className="py-3 sm:py-0">
+          <Button onClick={() => setCreateModalOpen(true)}>Create Team</Button>
+        </div>
       </header>
       <main>
         <div className="grid-row-3 mb-2 grid auto-rows-fr border-b p-6 sm:grid-cols-3">
