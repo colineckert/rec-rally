@@ -16,6 +16,12 @@ export const teamRouter = createTRPCRouter({
           name: true,
           image: true,
           description: true,
+          league: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           manager: {
             select: {
               id: true,
@@ -41,6 +47,7 @@ export const teamRouter = createTRPCRouter({
         name: team.name,
         image: team.image,
         description: team.description,
+        league: team.league,
         manager: {
           id: team.manager.id,
           name: team.manager.name,

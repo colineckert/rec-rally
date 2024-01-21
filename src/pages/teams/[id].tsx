@@ -61,6 +61,9 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         )}
       </header>
       <main>
+        <div className="grid-row-3 mb-2 grid auto-rows-fr border-b p-6 sm:grid-cols-3">
+          <TeamPlayers players={team.players} />
+        </div>
         <InfinitePostList
           posts={posts.data?.pages.flatMap((page) => page.posts)}
           isError={posts.isError}
@@ -73,6 +76,47 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 };
 
+function TeamPlayers({
+  players,
+}: {
+  players: Array<{ id: string; name: string | null; image: string | null }>;
+}) {
+  if (players.length === 0) {
+    return (
+      <div className="px-2">
+        <h3 className="pb-2 text-lg font-bold">Players</h3>
+        <div className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">
+          No players on this team yet.
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="px-2">
+      <h3 className="pb-2 text-lg font-bold">Players</h3>
+      <ul>
+        {players.map((player) => (
+          <li
+            key={player.id}
+            className="my-2 rounded-md border hover:bg-slate-100"
+          >
+            <div className="flex items-center justify-between p-2">
+              <Link
+                href={`/profiles/${player.id}`}
+                className="flex flex-grow items-center pl-1"
+              >
+                <ProfileImage src={player.image} />
+                <span className="pl-2">{player.name}</span>
+              </Link>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// TODO: Move to utils
 const pluralRules = new Intl.PluralRules();
 function getPlural(number: number, singular: string, plural: string) {
   return pluralRules.select(number) === "one" ? singular : plural;

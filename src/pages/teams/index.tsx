@@ -98,7 +98,7 @@ function ManagedTeams({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col px-2 pb-4">
-      <h3 className="pb-2 text-lg font-bold">Managed Teams</h3>
+      <h3 className="pb-2 text-lg font-bold">Managing</h3>
       <ul role="list">
         {managedTeams?.map((team) => (
           <li
@@ -145,7 +145,7 @@ function PlayerTeams({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col px-2 pb-4">
-      <h3 className="pb-2 text-lg font-bold">Player Teams</h3>
+      <h3 className="pb-2 text-lg font-bold">Playing</h3>
       <ul role="list">
         {playerTeams?.length === 0 && (
           <li className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">
