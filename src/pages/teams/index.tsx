@@ -31,7 +31,7 @@ const TeamsPage: NextPage = (): JSX.Element => {
   return (
     <>
       <Head>
-        <title>{`Pitchup - My Teams`}</title>
+        <title>{`RecRally - My Teams`}</title>
       </Head>
       <header className="sticky top-0 z-10 flex flex-col items-center border-b bg-white px-3 py-2 sm:flex-row">
         <div className="flex flex-grow flex-row items-center">

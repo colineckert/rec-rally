@@ -32,7 +32,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   return (
     <>
       <Head>
-        <title>{`Pitchup - ${team.name}`}</title>
+        <title>{`RecRally - ${team.name}`}</title>
       </Head>
       <header className="sticky top-0 z-10 flex flex-col items-center border-b bg-white px-3 py-2 sm:flex-row">
         <div className="flex flex-grow flex-row items-center">

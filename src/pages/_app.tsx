@@ -15,7 +15,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Head>
-        <title>PitchUp</title>
+        <title>RecRally</title>
         <meta name="description" content="Pickup games, made easier." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
