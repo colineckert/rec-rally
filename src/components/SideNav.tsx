@@ -6,10 +6,10 @@ import {
   HiHome,
   HiOutlineUserCircle,
   HiUserCircle,
-  HiOutlineUsers,
-  HiUsers,
   HiOutlineUserGroup,
   HiUserGroup,
+  HiOutlineCollection,
+  HiCollection,
   HiLogin,
   HiLogout,
 } from "react-icons/hi";
@@ -74,9 +74,9 @@ export function SideNav() {
                     }`}
                   >
                     {isSelected("/teams") ? (
-                      <HiUsers className="h-8 w-8" />
+                      <HiUserGroup className="h-8 w-8" />
                     ) : (
-                      <HiOutlineUsers className="h-8 w-8" />
+                      <HiOutlineUserGroup className="h-8 w-8" />
                     )}
                     <span className="hidden text-lg md:inline">Teams</span>
                   </span>
@@ -92,9 +92,9 @@ export function SideNav() {
                     }`}
                   >
                     {isSelected("/leagues") ? (
-                      <HiUserGroup className="h-8 w-8" />
+                      <HiCollection className="h-8 w-8" />
                     ) : (
-                      <HiOutlineUserGroup className="h-8 w-8" />
+                      <HiOutlineCollection className="h-8 w-8" />
                     )}
                     <span className="hidden text-lg md:inline">Leagues</span>
                   </span>
