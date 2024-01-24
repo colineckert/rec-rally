@@ -6,7 +6,8 @@ import {
   HiHome,
   HiOutlineUserCircle,
   HiUserCircle,
-  HiOutlineUserGroup,
+  HiOutlineUsers,
+  HiUsers,
   HiUserGroup,
   HiOutlineCollection,
   HiCollection,
@@ -26,6 +27,9 @@ export function SideNav() {
 
   return (
     <nav className="sticky top-0 px-2 py-4">
+      <Link href="/" className="flex justify-center pb-4">
+        <HiUserGroup className="h-10 w-10" />
+      </Link>
       <ul className="flex flex-col items-start gap-2 whitespace-nowrap">
         <li>
           <Link href="/">
@@ -74,9 +78,9 @@ export function SideNav() {
                     }`}
                   >
                     {isSelected("/teams") ? (
-                      <HiUserGroup className="h-8 w-8" />
+                      <HiUsers className="h-8 w-8" />
                     ) : (
-                      <HiOutlineUserGroup className="h-8 w-8" />
+                      <HiOutlineUsers className="h-8 w-8" />
                     )}
                     <span className="hidden text-lg md:inline">Teams</span>
                   </span>
