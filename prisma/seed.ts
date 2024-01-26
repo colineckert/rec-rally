@@ -38,8 +38,21 @@ async function main() {
       id: playerThreeId,
     },
     update: {
-      name: "Player Two",
+      name: "Player Three",
       image: "https://i.imgur.com/GDgRC8o.jpeg",
+    },
+  });
+
+  const playerFourId = "cl9ebqhxk00003b600tymyd03";
+  await db.user.upsert({
+    where: {
+      id: playerFourId,
+    },
+    create: {
+      id: playerFourId,
+    },
+    update: {
+      name: "Player Four",
     },
   });
 
