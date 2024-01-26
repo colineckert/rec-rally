@@ -8,14 +8,12 @@ import {
   HiUserCircle,
   HiOutlineUsers,
   HiUsers,
-  HiUserGroup,
-} from "react-icons/hi2";
-import {
-  HiOutlineCollection,
   HiCollection,
+  HiOutlineCollection,
   HiLogin,
   HiLogout,
 } from "react-icons/hi";
+import { HiUserGroup } from "react-icons/hi2";
 import { useRouter } from "next/router";
 
 export function SideNav() {

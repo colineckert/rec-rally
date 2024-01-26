@@ -7,11 +7,10 @@ import { Button } from "~/components/Button";
 import { ProfileImage } from "~/components/ProfileImage";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
-import { HiArrowLeft, HiCheck, HiX } from "react-icons/hi";
+import { HiChevronRight, HiArrowLeft, HiCheck, HiX } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
-import { HiChevronRight } from "react-icons/hi";
 import CreateTeamModal from "~/components/team-modal/CreateTeam";
 
 const LeaguesPage: NextPage = (): JSX.Element => {
