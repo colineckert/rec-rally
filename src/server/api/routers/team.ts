@@ -103,6 +103,12 @@ export const teamRouter = createTRPCRouter({
           id: true,
           name: true,
           image: true,
+          league: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
 
@@ -110,7 +116,7 @@ export const teamRouter = createTRPCRouter({
         id: team.id,
         name: team.name,
         image: team.image,
-        // league: team.league,
+        league: team.league,
       }));
     }),
   create: protectedProcedure

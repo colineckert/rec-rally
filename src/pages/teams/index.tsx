@@ -104,26 +104,20 @@ function ManagedTeams({ userId }: { userId: string }) {
             key={team.id}
             className="group/item my-2 rounded-md border hover:bg-slate-100"
           >
-            <div className="flex items-center justify-between p-2">
-              <ProfileImage
-                src={team.image}
-                className="mr-3 h-8 w-8 flex-shrink-0"
-              />
-              <div className="flex-grow">
-                <span>{team.name}</span>
-                <p className="text-sm text-gray-500">Manager: You</p>
+            <Link href={`/teams/${team.id}`}>
+              <div className="flex items-center justify-between p-2">
+                <ProfileImage
+                  src={team.image}
+                  className="mr-3 h-8 w-8 flex-shrink-0"
+                />
+                <div className="flex-grow">
+                  <span>{team.name}</span>
+                  {team.league ? (
+                    <p className="text-sm text-gray-500">{team.league.name}</p>
+                  ) : null}
+                </div>
               </div>
-              <Link
-                href={`/teams/${team.id}`}
-                className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
-              >
-                {/* TODO: optimize for mobile */}
-                <span className="text-sm group-hover/edit:text-gray-700">
-                  Manage
-                </span>
-                <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
-              </Link>
-            </div>
+            </Link>
           </li>
         ))}
       </ul>
@@ -156,25 +150,20 @@ function PlayerTeams({ userId }: { userId: string }) {
             key={team.id}
             className="group/item my-2 rounded-md border hover:bg-slate-100"
           >
-            <div className="flex items-center justify-between p-2">
-              <ProfileImage
-                src={team.image}
-                className="mr-3 h-8 w-8 flex-shrink-0"
-              />
-              <div className="flex-grow">
-                <span>{team.name}</span>
-                <p className="text-sm text-gray-500">Manager: You</p>
+            <Link href={`/teams/${team.id}`}>
+              <div className="flex items-center justify-between p-2">
+                <ProfileImage
+                  src={team.image}
+                  className="mr-3 h-8 w-8 flex-shrink-0"
+                />
+                <div className="flex-grow">
+                  <span>{team.name}</span>
+                  {team.league ? (
+                    <p className="text-sm text-gray-500">{team.league.name}</p>
+                  ) : null}
+                </div>
               </div>
-              <Link
-                href={`/teams/${team.id}`}
-                className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
-              >
-                <span className="text-sm group-hover/edit:text-gray-700">
-                  Visit
-                </span>
-                <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
-              </Link>
-            </div>
+            </Link>
           </li>
         ))}
       </ul>
