@@ -65,7 +65,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <TeamPlayers players={team.players} />
         </div>
         <InfinitePostList
-          posts={posts.data?.pages.flatMap((page) => page.posts)}
+          posts={posts.data?.pages?.flatMap((page) => page.posts) ?? []}
           isError={posts.isError}
           isLoading={posts.isLoading}
           hasMore={posts.hasNextPage}
