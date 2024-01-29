@@ -61,7 +61,35 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         )}
       </header>
       <main>
-        <div className="grid-row-3 mb-2 grid auto-rows-fr border-b p-6 sm:grid-cols-3">
+        <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
+          <div className="px-2">
+            {team.description ? (
+              <div className="pb-4">
+                <h3 className="pb-2 text-lg font-bold">About</h3>
+                <p className="text-gray-600">{team.description}</p>
+              </div>
+            ) : null}
+            <div className="pb-4">
+              <h3 className="pb-2 text-lg font-bold">Manager</h3>
+              <Link
+                href={`/profiles/${team.manager.id}`}
+                className="flex flex-grow items-center rounded-md border p-2 pl-1 hover:bg-slate-100"
+              >
+                <ProfileImage src={team.manager.image} />
+                <span className="pl-2">{team.manager.name}</span>
+              </Link>
+            </div>
+            <div>
+              <h3 className="pb-2 text-lg font-bold">League</h3>
+              {team.league ? (
+                <Link href={`/leagues/${team.league.id}`}>
+                  <span className="text-gray-600">{team.league.name}</span>
+                </Link>
+              ) : (
+                <span className="text-gray-600">No league</span>
+              )}
+            </div>
+          </div>
           <TeamPlayers players={team.players} />
         </div>
         <InfinitePostList

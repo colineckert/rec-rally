@@ -51,7 +51,7 @@ const TeamsPage: NextPage = (): JSX.Element => {
         </div>
       </header>
       <main>
-        <div className="grid-row-3 mb-2 grid auto-rows-fr border-b p-6 sm:grid-cols-3">
+        <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
           <ManagedTeams userId={user.id} />
           <PlayerTeams userId={user.id} />
           <div className="px-2">
