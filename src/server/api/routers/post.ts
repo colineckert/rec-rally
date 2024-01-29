@@ -36,7 +36,7 @@ export const postRouter = createTRPCRouter({
     )
     .query(
       async ({ input: { limit = 10, onlyFollowing = false, cursor }, ctx }) => {
-        const currentUserId = ctx.session?.user.id;
+        const currentUserId = ctx.session?.user?.id;
         return await getInfinitePosts({
           limit,
           ctx,
@@ -167,7 +167,7 @@ async function getInfinitePosts({
   cursor: { id: string; createdAt: Date } | undefined;
   ctx: inferAsyncReturnType<typeof createTRPCContext>;
 }) {
-  const currentUserId = ctx.session?.user.id;
+  const currentUserId = ctx.session?.user?.id;
 
   const data = await ctx.db.post.findMany({
     take: limit + 1,
