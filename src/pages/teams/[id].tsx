@@ -15,6 +15,7 @@ import { ProfileImage } from "~/components/ProfileImage";
 import { InfinitePostList } from "~/components/InfinitePostList";
 import { useSession } from "next-auth/react";
 import ManageTeamDropdown from "~/components/ManageTeamDropdown";
+import { ItemLinkCard } from "~/components/ItemLinkCard";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -29,10 +30,12 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
   if (team?.name == null) return <ErrorPage statusCode={404} />;
 
+  const { name, image, description, manager, playersCount, league } = team;
+
   return (
     <>
       <Head>
-        <title>{`RecRally - ${team.name}`}</title>
+        <title>{`RecRally - ${name}`}</title>
       </Head>
       <header className="sticky top-0 z-10 flex flex-col items-center border-b bg-white px-3 py-2 sm:flex-row">
         <div className="flex flex-grow flex-row items-center">
@@ -42,14 +45,13 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </IconHoverEffect>
           </Link>
           <div className="flex items-center">
-            <ProfileImage src={team.image} className="flex-shrink-0" />
+            <ProfileImage src={image} className="flex-shrink-0" />
             <div className="ml-2">
               <h1 className="text-lg font-bold">{team.name}</h1>
               <div className="text-gray-500">
-                Manager: {team.manager.name}
+                Manager: {manager.name}
                 {" - "}
-                {team.playersCount}{" "}
-                {getPlural(team.playersCount, "Player", "Players")}
+                {playersCount} {getPlural(playersCount, "Player", "Players")}
               </div>
             </div>
           </div>
@@ -63,27 +65,25 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <main>
         <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
           <div className="px-2">
-            {team.description ? (
+            {description ? (
               <div className="pb-4">
                 <h3 className="pb-2 text-lg font-bold">About</h3>
-                <p className="text-gray-600">{team.description}</p>
+                <p className="text-gray-600">{description}</p>
               </div>
             ) : null}
             <div className="pb-4">
               <h3 className="pb-2 text-lg font-bold">Manager</h3>
-              <Link
-                href={`/profiles/${team.manager.id}`}
-                className="flex flex-grow items-center rounded-md border p-2 pl-1 hover:bg-slate-100"
-              >
-                <ProfileImage src={team.manager.image} />
-                <span className="pl-2">{team.manager.name}</span>
-              </Link>
+              <ItemLinkCard
+                href={`/profiles/${manager.id}`}
+                image={manager.image}
+                name={manager.name}
+              />
             </div>
             <div>
               <h3 className="pb-2 text-lg font-bold">League</h3>
-              {team.league ? (
-                <Link href={`/leagues/${team.league.id}`}>
-                  <span className="text-gray-600">{team.league.name}</span>
+              {league ? (
+                <Link href={`/leagues/${league.id}`}>
+                  <span className="text-gray-600">{league.name}</span>
                 </Link>
               ) : (
                 <span className="text-gray-600">No league</span>
@@ -124,19 +124,12 @@ function TeamPlayers({
       <h3 className="pb-2 text-lg font-bold">Players</h3>
       <ul>
         {players.map((player) => (
-          <li
-            key={player.id}
-            className="my-2 rounded-md border hover:bg-slate-100"
-          >
-            <div className="flex items-center justify-between p-2">
-              <Link
-                href={`/profiles/${player.id}`}
-                className="flex flex-grow items-center pl-1"
-              >
-                <ProfileImage src={player.image} />
-                <span className="pl-2">{player.name}</span>
-              </Link>
-            </div>
+          <li key={player.id} className="my-2 first:mt-0 last:mb-0">
+            <ItemLinkCard
+              href={`/profiles/${player.id}`}
+              image={player.image}
+              name={player.name}
+            />
           </li>
         ))}
       </ul>

@@ -12,6 +12,7 @@ import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
 import CreateTeamModal from "~/components/team-modal/CreateTeam";
+import { ItemLinkCard } from "~/components/ItemLinkCard";
 
 const TeamsPage: NextPage = (): JSX.Element => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -100,24 +101,14 @@ function ManagedTeams({ userId }: { userId: string }) {
       <h3 className="pb-2 text-lg font-bold">Managing</h3>
       <ul role="list">
         {managedTeams?.map((team) => (
-          <li
-            key={team.id}
-            className="my-2 rounded-md border hover:bg-slate-100"
-          >
-            <Link href={`/teams/${team.id}`}>
-              <div className="flex items-center justify-between p-2">
-                <ProfileImage
-                  src={team.image}
-                  className="mr-3 h-8 w-8 flex-shrink-0"
-                />
-                <div className="flex-grow">
-                  <span>{team.name}</span>
-                  {team.league ? (
-                    <p className="text-sm text-gray-500">{team.league.name}</p>
-                  ) : null}
-                </div>
-              </div>
-            </Link>
+          <li key={team.id} className="my-2 first:mt-0 last:mb-0">
+            <ItemLinkCard
+              href={`/teams/${team.id}`}
+              image={team.image}
+              imageClassName="h-8 w-8 flex-shrink-0"
+              name={team.name}
+              subtext={team.league?.name}
+            />
           </li>
         ))}
       </ul>
@@ -146,24 +137,14 @@ function PlayerTeams({ userId }: { userId: string }) {
           </li>
         )}
         {playerTeams?.map((team) => (
-          <li
-            key={team.id}
-            className="my-2 rounded-md border hover:bg-slate-100"
-          >
-            <Link href={`/teams/${team.id}`}>
-              <div className="flex items-center justify-between p-2">
-                <ProfileImage
-                  src={team.image}
-                  className="mr-3 h-8 w-8 flex-shrink-0"
-                />
-                <div className="flex-grow">
-                  <span>{team.name}</span>
-                  {team.league ? (
-                    <p className="text-sm text-gray-500">{team.league.name}</p>
-                  ) : null}
-                </div>
-              </div>
-            </Link>
+          <li key={team.id} className="my-2 first:mt-0 last:mb-0">
+            <ItemLinkCard
+              href={`/teams/${team.id}`}
+              image={team.image}
+              imageClassName="h-8 w-8 flex-shrink-0"
+              name={team.name}
+              subtext={team.league?.name}
+            />
           </li>
         ))}
       </ul>
