@@ -102,7 +102,7 @@ function ManagedTeams({ userId }: { userId: string }) {
         {managedTeams?.map((team) => (
           <li
             key={team.id}
-            className="group/item my-2 rounded-md border hover:bg-slate-100"
+            className="my-2 rounded-md border hover:bg-slate-100"
           >
             <Link href={`/teams/${team.id}`}>
               <div className="flex items-center justify-between p-2">
@@ -148,7 +148,7 @@ function PlayerTeams({ userId }: { userId: string }) {
         {playerTeams?.map((team) => (
           <li
             key={team.id}
-            className="group/item my-2 rounded-md border hover:bg-slate-100"
+            className="my-2 rounded-md border hover:bg-slate-100"
           >
             <Link href={`/teams/${team.id}`}>
               <div className="flex items-center justify-between p-2">
