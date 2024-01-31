@@ -9,7 +9,7 @@ type PlayerCardProps = {
   subtext?: string;
 };
 
-export function ItemLinkCard({
+export function LinkItemCard({
   href,
   image,
   imageClassName,

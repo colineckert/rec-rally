@@ -15,7 +15,7 @@ import { ProfileImage } from "~/components/ProfileImage";
 import { InfinitePostList } from "~/components/InfinitePostList";
 import { useSession } from "next-auth/react";
 import ManageTeamDropdown from "~/components/ManageTeamDropdown";
-import { ItemLinkCard } from "~/components/ItemLinkCard";
+import { LinkItemCard } from "~/components/LinkItemCard";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -73,7 +73,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             ) : null}
             <div className="pb-4">
               <h3 className="pb-2 text-lg font-bold">Manager</h3>
-              <ItemLinkCard
+              <LinkItemCard
                 href={`/profiles/${manager.id}`}
                 image={manager.image}
                 name={manager.name}
@@ -125,7 +125,7 @@ function TeamPlayers({
       <ul>
         {players.map((player) => (
           <li key={player.id} className="my-2 first:mt-0 last:mb-0">
-            <ItemLinkCard
+            <LinkItemCard
               href={`/profiles/${player.id}`}
               image={player.image}
               name={player.name}

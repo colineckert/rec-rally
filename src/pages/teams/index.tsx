@@ -12,7 +12,7 @@ import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
 import CreateTeamModal from "~/components/team-modal/CreateTeam";
-import { ItemLinkCard } from "~/components/ItemLinkCard";
+import { LinkItemCard } from "~/components/LinkItemCard";
 
 const TeamsPage: NextPage = (): JSX.Element => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -102,7 +102,7 @@ function ManagedTeams({ userId }: { userId: string }) {
       <ul role="list">
         {managedTeams?.map((team) => (
           <li key={team.id} className="my-2 first:mt-0 last:mb-0">
-            <ItemLinkCard
+            <LinkItemCard
               href={`/teams/${team.id}`}
               image={team.image}
               imageClassName="h-8 w-8 flex-shrink-0"
@@ -138,7 +138,7 @@ function PlayerTeams({ userId }: { userId: string }) {
         )}
         {playerTeams?.map((team) => (
           <li key={team.id} className="my-2 first:mt-0 last:mb-0">
-            <ItemLinkCard
+            <LinkItemCard
               href={`/teams/${team.id}`}
               image={team.image}
               imageClassName="h-8 w-8 flex-shrink-0"
