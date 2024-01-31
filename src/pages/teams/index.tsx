@@ -7,7 +7,7 @@ import { Button } from "~/components/Button";
 import { ProfileImage } from "~/components/ProfileImage";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
-import { HiChevronRight, HiArrowLeft, HiCheck, HiX } from "react-icons/hi";
+import { HiArrowLeft, HiCheck, HiX } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
