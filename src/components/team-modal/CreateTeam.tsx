@@ -16,16 +16,10 @@ export default function CreateTeamModal({
 }: CreateTeamModalProps) {
   const trpcUtils = api.useUtils();
   const createTeam = api.team.create.useMutation({
-    onSuccess: (newTeam) => {
-      console.log("Team Created:", newTeam);
-
-      trpcUtils.team.getManagerTeamsByUserId.setData(
-        { userId: managerId },
-        (oldData) => {
-          if (oldData == null) return;
-          return [...oldData, newTeam];
-        },
-      );
+    onSettled: async () => {
+      await trpcUtils.team.getManagerTeamsByUserId.refetch({
+        userId: managerId,
+      });
     },
   });
 
@@ -37,8 +31,9 @@ export default function CreateTeamModal({
     const image = (event.target as any).teamImageUrl.value || null;
     const description = (event.target as any).description.value || null;
     // TODO: leagueId
+    const leagueId = null;
 
-    await createTeam.mutateAsync({ name, image, description });
+    await createTeam.mutateAsync({ name, image, description, leagueId });
     closeModal();
   }
 

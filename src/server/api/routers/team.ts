@@ -125,21 +125,25 @@ export const teamRouter = createTRPCRouter({
         name: z.string(),
         image: z.string().nullable(),
         description: z.string().nullable(),
+        leagueId: z.string().nullable(),
       }),
     )
-    .mutation(async ({ input: { name, image, description }, ctx }) => {
-      const currentUserId = ctx.session.user.id;
-      const team = await ctx.db.team.create({
-        data: {
-          name,
-          image,
-          description,
-          managerId: currentUserId,
-        },
-      });
+    .mutation(
+      async ({ input: { name, image, description, leagueId }, ctx }) => {
+        const currentUserId = ctx.session.user.id;
+        const team = await ctx.db.team.create({
+          data: {
+            name,
+            image,
+            description,
+            leagueId,
+            managerId: currentUserId,
+          },
+        });
 
-      return team;
-    }),
+        return team;
+      },
+    ),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id }, ctx }) => {
