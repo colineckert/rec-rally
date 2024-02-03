@@ -1,20 +1,17 @@
 import { type NextPage } from "next";
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import ErrorPage from "next/error";
-import { Button } from "~/components/Button";
 import { ProfileImage } from "~/components/ProfileImage";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
-import { HiChevronRight, HiArrowLeft, HiCheck, HiX } from "react-icons/hi";
+import { HiChevronRight, HiArrowLeft, HiBookmark } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
-import CreateTeamModal from "~/components/team-modal/CreateTeam";
+import { getPlural } from "~/utils/formatters";
 
 const LeaguesPage: NextPage = (): JSX.Element => {
-  const [createModalOpen, setCreateModalOpen] = useState(false);
   const session = useSession();
 
   if (session.status === "loading") {
@@ -46,15 +43,11 @@ const LeaguesPage: NextPage = (): JSX.Element => {
             </div>
           </div>
         </div>
-        <div className="py-3 sm:py-0">
-          <Button onClick={() => setCreateModalOpen(true)}>Create Team</Button>
-        </div>
       </header>
       <main>
-        <div className="grid-row-3 mb-2 grid auto-rows-fr border-b p-6 sm:grid-cols-3">
-          <ManagedTeams userId={user.id} />
-          <PlayerTeams userId={user.id} />
-          <div className="px-2">
+        <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
+          <PlayerLeagues userId={user.id} />
+          {/* <div className="px-2">
             <h3 className="pb-2 text-lg font-bold">Invites</h3>
             <ul>
               <li className="my-2 rounded-md border hover:bg-slate-100">
@@ -71,25 +64,73 @@ const LeaguesPage: NextPage = (): JSX.Element => {
                 </div>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
+        {/* TODO: implement league posts */}
         <MyTeamsPosts />
       </main>
-      <CreateTeamModal
+      {/* <CreateTeamModal
         managerId={user.id}
         isOpen={createModalOpen}
         closeModal={() => setCreateModalOpen(false)}
-      />
+      /> */}
     </>
   );
 };
 
-function ManagedTeams({ userId }: { userId: string }) {
+// function ManagedTeams({ userId }: { userId: string }) {
+//   const {
+//     data: managedTeams,
+//     isLoading,
+//     isFetching,
+//   } = api.team.getManagerTeamsByUserId.useQuery({ userId });
+
+//   if (isLoading || isFetching) {
+//     return <LoadingSpinner />;
+//   }
+
+//   return (
+//     <div className="flex flex-col px-2 pb-4">
+//       <h3 className="pb-2 text-lg font-bold">Managed Teams</h3>
+//       <ul role="list">
+//         {managedTeams?.map((team) => (
+//           <li
+//             key={team.id}
+//             className="group/item my-2 rounded-md border hover:bg-slate-100"
+//           >
+//             <div className="flex items-center justify-between p-2">
+//               <ProfileImage
+//                 src={team.image}
+//                 className="mr-3 h-8 w-8 flex-shrink-0"
+//               />
+//               <div className="flex-grow">
+//                 <span>{team.name}</span>
+//                 <p className="text-sm text-gray-500">Manager: You</p>
+//               </div>
+//               <Link
+//                 href={`/teams/${team.id}`}
+//                 className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
+//               >
+//                 {/* TODO: optimize for mobile */}
+//                 <span className="text-sm group-hover/edit:text-gray-700">
+//                   Manage
+//                 </span>
+//                 <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
+//               </Link>
+//             </div>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// }
+
+function PlayerLeagues({ userId }: { userId: string }) {
   const {
-    data: managedTeams,
+    data: playerLeagues,
     isLoading,
     isFetching,
-  } = api.team.getManagerTeamsByUserId.useQuery({ userId });
+  } = api.league.getByPlayerId.useQuery({ userId });
 
   if (isLoading || isFetching) {
     return <LoadingSpinner />;
@@ -97,76 +138,33 @@ function ManagedTeams({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col px-2 pb-4">
-      <h3 className="pb-2 text-lg font-bold">Managed Teams</h3>
+      <h3 className="pb-2 text-lg font-bold">My Leagues</h3>
       <ul role="list">
-        {managedTeams?.map((team) => (
-          <li
-            key={team.id}
-            className="group/item my-2 rounded-md border hover:bg-slate-100"
-          >
-            <div className="flex items-center justify-between p-2">
-              <ProfileImage
-                src={team.image}
-                className="mr-3 h-8 w-8 flex-shrink-0"
-              />
-              <div className="flex-grow">
-                <span>{team.name}</span>
-                <p className="text-sm text-gray-500">Manager: You</p>
-              </div>
-              <Link
-                href={`/teams/${team.id}`}
-                className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
-              >
-                {/* TODO: optimize for mobile */}
-                <span className="text-sm group-hover/edit:text-gray-700">
-                  Manage
-                </span>
-                <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
-              </Link>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function PlayerTeams({ userId }: { userId: string }) {
-  const {
-    data: playerTeams,
-    isLoading,
-    isFetching,
-  } = api.team.getPlayerTeamsByUserId.useQuery({ userId });
-
-  if (isLoading || isFetching) {
-    return <LoadingSpinner />;
-  }
-
-  return (
-    <div className="flex flex-col px-2 pb-4">
-      <h3 className="pb-2 text-lg font-bold">Player Teams</h3>
-      <ul role="list">
-        {playerTeams?.length === 0 && (
+        {playerLeagues?.length === 0 && (
           <li className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">
-            You are not a member of any teams.
+            You are not a member of any leagues.
           </li>
         )}
-        {playerTeams?.map((team) => (
+        {playerLeagues?.map((league) => (
           <li
-            key={team.id}
+            key={league.id}
             className="group/item my-2 rounded-md border hover:bg-slate-100"
           >
-            <div className="flex items-center justify-between p-2">
-              <ProfileImage
+            <div className="flex items-center justify-between px-3 py-2">
+              {/* TODO: should leagues have images? */}
+              {/* <ProfileImage
                 src={team.image}
                 className="mr-3 h-8 w-8 flex-shrink-0"
-              />
+              /> */}
+              <HiBookmark className="mr-2 h-10 w-10 flex-shrink-0 text-slate-400" />
               <div className="flex-grow">
-                <span>{team.name}</span>
-                <p className="text-sm text-gray-500">Manager: You</p>
+                <span>{league.name}</span>
+                <p className="text-sm text-gray-500">{`${
+                  league.teamsCount
+                } ${getPlural(league.teamsCount, "Team", "Teams")}`}</p>
               </div>
               <Link
-                href={`/teams/${team.id}`}
+                href={`/leagues/${league.id}`}
                 className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
               >
                 <span className="text-sm group-hover/edit:text-gray-700">
