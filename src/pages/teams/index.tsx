@@ -58,7 +58,7 @@ const TeamsPage: NextPage = (): JSX.Element => {
           <div className="px-2">
             <h3 className="pb-2 text-lg font-bold">Invites</h3>
             <ul>
-              <li className="my-2 rounded-md border hover:bg-slate-100">
+              <li className="rounded-md border hover:bg-slate-100">
                 <div className="flex items-center justify-between p-2">
                   <Link className="flex-grow pl-1" href={`/teams/1`}>
                     Chelsea
