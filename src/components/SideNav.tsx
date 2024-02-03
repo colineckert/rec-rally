@@ -10,8 +10,8 @@ import {
   HiUsers,
   HiCollection,
   HiOutlineCollection,
-  HiLogin,
-  HiLogout,
+  HiOutlineLogin,
+  HiOutlineLogout,
 } from "react-icons/hi";
 import { HiUserGroup } from "react-icons/hi2";
 import { useRouter } from "next/router";
@@ -112,7 +112,7 @@ export function SideNav() {
             <button onClick={() => void signIn()}>
               <IconHoverEffect>
                 <span className="flex items-center gap-4">
-                  <HiLogin className="h-8 w-8 fill-green-700" />
+                  <HiOutlineLogin className="h-8 w-8 text-green-700" />
                   <span className="hidden text-lg text-green-700 md:inline">
                     Log In
                   </span>
@@ -125,7 +125,7 @@ export function SideNav() {
             <button onClick={() => void signOut()}>
               <IconHoverEffect>
                 <span className="flex items-center gap-4">
-                  <HiLogout className="h-8 w-8 fill-red-700" />
+                  <HiOutlineLogout className="h-8 w-8 text-red-700" />
                   <span className="hidden text-lg text-red-700 md:inline">
                     Log Out
                   </span>
