@@ -16,6 +16,7 @@ import { InfinitePostList } from "~/components/InfinitePostList";
 import { useSession } from "next-auth/react";
 import ManageTeamDropdown from "~/components/ManageTeamDropdown";
 import { LinkItemCard } from "~/components/LinkItemCard";
+import { getPlural } from "~/utils/formatters";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -135,12 +136,6 @@ function TeamPlayers({
       </ul>
     </div>
   );
-}
-
-// TODO: Move to utils
-const pluralRules = new Intl.PluralRules();
-function getPlural(number: number, singular: string, plural: string) {
-  return pluralRules.select(number) === "one" ? singular : plural;
 }
 
 export const getStaticPaths: GetStaticPaths = () => {
