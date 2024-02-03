@@ -57,7 +57,7 @@ async function main() {
   });
 
   const teamOneId = "cl9ebqhxk00003b600tymyt01";
-  const team = await db.team.upsert({
+  const team1 = await db.team.upsert({
     where: {
       id: teamOneId,
     },
@@ -78,7 +78,27 @@ async function main() {
     update: {},
   });
 
-  console.log("Team:", { team });
+  const teamTwoId = "cl9ebqhxk00003b600tymyt02";
+  const team2 = await db.team.upsert({
+    where: {
+      id: teamTwoId,
+    },
+    create: {
+      id: teamTwoId,
+      name: "Aston Villa",
+      managerId: playerTwoId,
+      image:
+        "https://www.shutterstock.com/image-vector/aston-englandseptember-14-2023aston-villa-600nw-2361639603.jpg",
+      players: {
+        connect: [
+          { id: "clpfuqvex0000im3vau7gdkja" },
+          { id: playerThreeId },
+          { id: playerFourId },
+        ],
+      },
+    },
+    update: {},
+  });
 
   const leagueOneId = "cl9ebqhxk00003b600tymyl01";
   const league = await db.league.upsert({
@@ -89,14 +109,7 @@ async function main() {
       id: leagueOneId,
       name: "Premier League",
       teams: {
-        connect: [{ id: teamOneId }],
-      },
-      players: {
-        connect: [
-          { id: "clpfuqvex0000im3vau7gdkja" },
-          { id: player1.id },
-          { id: player2.id },
-        ],
+        connect: [{ id: team1.id }, { id: team2.id }],
       },
     },
     update: {},

@@ -102,9 +102,8 @@ model User {
   follows   User[] @relation(name: "Followers")
 
   position     String?
-  managedTeams Team[]   @relation(name: "TeamManager")
-  playerTeams  Team[]   @relation(name: "TeamPlayers")
-  leagues      League[]
+  managedTeams Team[]  @relation(name: "TeamManager")
+  playerTeams  Team[]  @relation(name: "TeamPlayers")
 }
 
 model VerificationToken {
@@ -141,7 +140,6 @@ model League {
 
   managerId String?
   teams     Team[]
-  players   User[]
 
   @@unique([name, id])
   @@index([managerId])
