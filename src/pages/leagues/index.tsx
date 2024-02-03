@@ -40,7 +40,7 @@ const LeaguesPage: NextPage = (): JSX.Element => {
           <div className="flex items-center">
             <ProfileImage src={user.image} className="flex-shrink-0" />
             <div className="ml-2">
-              <h1 className="text-lg font-bold">{user.name}'s Teams</h1>
+              <h1 className="text-lg font-bold">{user.name}'s Leagues</h1>
             </div>
           </div>
         </div>

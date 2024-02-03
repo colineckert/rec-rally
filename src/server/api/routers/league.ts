@@ -32,13 +32,6 @@ export const leagueRouter = createTRPCRouter({
               },
             },
           },
-          players: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
         },
       });
 
@@ -58,11 +51,6 @@ export const leagueRouter = createTRPCRouter({
             name: team.manager.name,
             image: team.manager.image,
           },
-        })),
-        players: league.players.map((player) => ({
-          id: player.id,
-          name: player.name,
-          image: player.image,
         })),
       };
     }),
