@@ -64,6 +64,8 @@ async function main() {
     create: {
       id: teamOneId,
       name: "Chelsea",
+      description:
+        "Chelsea Football Club is an English professional football club based in Fulham, London.",
       managerId: playerOneId,
       image:
         "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png",
@@ -86,6 +88,8 @@ async function main() {
     create: {
       id: teamTwoId,
       name: "Aston Villa",
+      description:
+        "Aston Villa Football Club is an English professional football club based in Aston, Birmingham.",
       managerId: playerTwoId,
       image:
         "https://www.shutterstock.com/image-vector/aston-englandseptember-14-2023aston-villa-600nw-2361639603.jpg",
@@ -101,13 +105,15 @@ async function main() {
   });
 
   const leagueOneId = "cl9ebqhxk00003b600tymyl01";
-  const league = await db.league.upsert({
+  const league1 = await db.league.upsert({
     where: {
       id: leagueOneId,
     },
     create: {
       id: leagueOneId,
       name: "Premier League",
+      description:
+        "The Premier League, often referred to as the English Premier League or the EPL, is the top level of the English football league system.",
       teams: {
         connect: [{ id: team1.id }, { id: team2.id }],
       },
@@ -115,7 +121,24 @@ async function main() {
     update: {},
   });
 
-  console.log("League:", { league });
+  const leagueTwoId = "cl9ebqhxk00003b600tymyl02";
+  const league2 = await db.league.upsert({
+    where: {
+      id: leagueTwoId,
+    },
+    create: {
+      id: leagueTwoId,
+      name: "La Liga",
+      description:
+        "La Liga is the top professional football division of the Spanish football league system.",
+      teams: {
+        connect: [{ id: team1.id }, { id: team2.id }],
+      },
+    },
+    update: {},
+  });
+
+  console.log("Leagues:", { league1, league2 });
 }
 
 main()
