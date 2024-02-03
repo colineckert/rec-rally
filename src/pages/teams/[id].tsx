@@ -29,7 +29,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
-  if (team?.name == null) return <ErrorPage statusCode={404} />;
+  if (!team) return <ErrorPage statusCode={404} />;
 
   const { name, image, description, manager, playersCount, league } = team;
 
