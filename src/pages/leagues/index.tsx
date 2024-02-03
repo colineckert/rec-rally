@@ -5,11 +5,12 @@ import ErrorPage from "next/error";
 import { ProfileImage } from "~/components/ProfileImage";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
-import { HiChevronRight, HiArrowLeft, HiBookmark } from "react-icons/hi";
+import { HiArrowLeft, HiBookmark } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
 import { getPlural } from "~/utils/formatters";
+import { LinkItemCard } from "~/components/LinkItemCard";
 
 const LeaguesPage: NextPage = (): JSX.Element => {
   const session = useSession();
@@ -146,33 +147,17 @@ function PlayerLeagues({ userId }: { userId: string }) {
           </li>
         )}
         {playerLeagues?.map((league) => (
-          <li
-            key={league.id}
-            className="group/item my-2 rounded-md border hover:bg-slate-100"
-          >
-            <div className="flex items-center justify-between px-3 py-2">
-              {/* TODO: should leagues have images? */}
-              {/* <ProfileImage
-                src={team.image}
-                className="mr-3 h-8 w-8 flex-shrink-0"
-              /> */}
-              <HiBookmark className="mr-2 h-10 w-10 flex-shrink-0 text-slate-400" />
-              <div className="flex-grow">
-                <span>{league.name}</span>
-                <p className="text-sm text-gray-500">{`${
-                  league.teamsCount
-                } ${getPlural(league.teamsCount, "Team", "Teams")}`}</p>
-              </div>
-              <Link
-                href={`/leagues/${league.id}`}
-                className="group/edit invisible flex items-center rounded-full p-2 text-gray-500 hover:bg-slate-200 group-hover/item:visible"
-              >
-                <span className="text-sm group-hover/edit:text-gray-700">
-                  Visit
-                </span>
-                <HiChevronRight className="group-hover/edit:translate-x-0.5 group-hover/edit:text-slate-500" />
-              </Link>
-            </div>
+          <li key={league.id} className="my-2 first:mt-0 last:mb-0">
+            <LinkItemCard
+              href={`/leagues/${league.id}`}
+              icon={<HiBookmark className="h-10 w-10 text-slate-400" />}
+              title={league.name}
+              subtitle={`${league.teams.length} ${getPlural(
+                league.teams.length,
+                "team",
+                "teams",
+              )}`}
+            />
           </li>
         ))}
       </ul>

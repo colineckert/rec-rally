@@ -106,8 +106,8 @@ function ManagedTeams({ userId }: { userId: string }) {
               href={`/teams/${team.id}`}
               image={team.image}
               imageClassName="h-8 w-8 flex-shrink-0"
-              name={team.name}
-              subtext={team.league?.name}
+              title={team.name}
+              subtitle={team.league?.name}
             />
           </li>
         ))}
@@ -142,8 +142,8 @@ function PlayerTeams({ userId }: { userId: string }) {
               href={`/teams/${team.id}`}
               image={team.image}
               imageClassName="h-8 w-8 flex-shrink-0"
-              name={team.name}
-              subtext={team.league?.name}
+              title={team.name}
+              subtitle={team.league?.name}
             />
           </li>
         ))}

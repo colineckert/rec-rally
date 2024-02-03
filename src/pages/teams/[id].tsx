@@ -77,7 +77,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               <LinkItemCard
                 href={`/profiles/${manager.id}`}
                 image={manager.image}
-                name={manager.name}
+                title={manager.name}
               />
             </div>
             <div>
@@ -129,7 +129,7 @@ function TeamPlayers({
             <LinkItemCard
               href={`/profiles/${player.id}`}
               image={player.image}
-              name={player.name}
+              title={player.name}
             />
           </li>
         ))}
