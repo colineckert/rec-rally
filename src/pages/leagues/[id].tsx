@@ -21,15 +21,15 @@ const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 }) => {
   // const session = useSession();
   // const currentUserId = session.data?.user?.id;
-  const { data: team } = api.league.getById.useQuery({ id });
+  const { data: league } = api.league.getById.useQuery({ id });
   const posts = api.post.infiniteTeamFeed.useInfiniteQuery(
     { teamId: id },
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
-  if (team?.name == null) return <ErrorPage statusCode={404} />;
+  if (!league) return <ErrorPage statusCode={404} />;
 
-  const { name, description, teams, teamsCount } = team;
+  const { name, description, teams, teamsCount } = league;
 
   return (
     <>
@@ -45,7 +45,7 @@ const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </Link>
           <div className="flex items-center">
             <div className="ml-2">
-              <h1 className="text-lg font-bold">{team.name}</h1>
+              <h1 className="text-lg font-bold">{name}</h1>
               <div className="text-gray-500">
                 {teamsCount} {getPlural(teamsCount, "Team", "Teams")}
               </div>
@@ -134,7 +134,7 @@ export async function getStaticProps(
   if (id == null) {
     return {
       redirect: {
-        destination: "/teams",
+        destination: "/leagues",
       },
     };
   }
