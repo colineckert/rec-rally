@@ -5,7 +5,8 @@ import ErrorPage from "next/error";
 import { ProfileImage } from "~/components/ProfileImage";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
-import { HiArrowLeft, HiBookmark } from "react-icons/hi";
+import { HiArrowLeft } from "react-icons/hi";
+import { HiClipboardDocumentList } from "react-icons/hi2";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
@@ -85,7 +86,9 @@ function PlayerLeagues({ userId }: { userId: string }) {
           <li key={league.id} className="my-2 first:mt-0 last:mb-0">
             <LinkItemCard
               href={`/leagues/${league.id}`}
-              icon={<HiBookmark className="h-10 w-10 text-slate-400" />}
+              icon={
+                <HiClipboardDocumentList className="h-8 w-8 text-slate-500" />
+              }
               title={league.name}
               subtitle={`${league.teams.length} ${getPlural(
                 league.teams.length,
