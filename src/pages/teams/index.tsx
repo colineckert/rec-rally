@@ -96,9 +96,13 @@ function ManagedTeams({ userId }: { userId: string }) {
     return <LoadingSpinner />;
   }
 
+  if (managedTeams?.length === 0) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col px-2 pb-4">
-      <h3 className="pb-2 text-lg font-bold">Managing</h3>
+      <h3 className="pb-2 text-lg font-bold">My Teams</h3>
       <ul role="list">
         {managedTeams?.map((team) => (
           <li key={team.id} className="my-2 first:mt-0 last:mb-0">
@@ -129,7 +133,7 @@ function PlayerTeams({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col px-2 pb-4">
-      <h3 className="pb-2 text-lg font-bold">Playing</h3>
+      <h3 className="pb-2 text-lg font-bold">Joined</h3>
       <ul role="list">
         {playerTeams?.length === 0 && (
           <li className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">
