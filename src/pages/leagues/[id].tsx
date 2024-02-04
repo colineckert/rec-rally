@@ -12,25 +12,17 @@ import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
 import { HiArrowLeft } from "react-icons/hi";
 import { InfinitePostList } from "~/components/InfinitePostList";
-import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import { getPlural } from "~/utils/formatters";
 
 const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
-  const { data: league, isLoading } = api.league.getById.useQuery({ id });
+  const { data: league } = api.league.getById.useQuery({ id });
   const posts = api.post.infiniteTeamFeed.useInfiniteQuery(
     { teamId: id },
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
-
-  if (isLoading)
-    return (
-      <div className="p-16">
-        <LoadingSpinner />
-      </div>
-    );
 
   if (!league) return <ErrorPage statusCode={404} />;
 
@@ -145,7 +137,7 @@ export async function getStaticProps(
   }
 
   const ssg = ssgHelper();
-  await ssg.team.getById.prefetch({ id });
+  await ssg.league.getById.prefetch({ id });
 
   return {
     props: {
