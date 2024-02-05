@@ -7,6 +7,19 @@ import {
 } from "~/server/api/trpc";
 
 export const leagueRouter = createTRPCRouter({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const leagues = await ctx.db.league.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    return leagues.map((league) => ({
+      id: league.id,
+      name: league.name,
+    }));
+  }),
   getById: publicProcedure
     .input(z.object({ id: z.string().nullable() }))
     .query(async ({ input: { id }, ctx }) => {

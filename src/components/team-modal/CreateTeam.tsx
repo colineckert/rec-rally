@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, type SyntheticEvent } from "react";
+import { Dialog, Listbox, Transition } from "@headlessui/react";
+import type { League } from "@prisma/client";
+import { Fragment, useState, type SyntheticEvent } from "react";
+import { HiCheck } from "react-icons/hi";
+import { HiChevronUpDown } from "react-icons/hi2";
+import { set } from "zod";
 import { api } from "~/utils/api";
 
 type CreateTeamModalProps = {
@@ -23,23 +27,35 @@ export default function CreateTeamModal({
     },
   });
 
+  const { data: leagues } = api.league.getAll.useQuery();
+  const [selected, setSelected] = useState<Pick<League, "id" | "name"> | null>(
+    null,
+  );
+
+  function handleCloseModal() {
+    setSelected(null);
+    closeModal();
+  }
   async function handleCreateTeam(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
-
     // TODO: Add validation
     const name = (event.target as any).teamName.value;
     const image = (event.target as any).teamImageUrl.value || null;
     const description = (event.target as any).description.value || null;
-    // TODO: leagueId
-    const leagueId = null;
 
-    await createTeam.mutateAsync({ name, image, description, leagueId });
-    closeModal();
+    await createTeam.mutateAsync({
+      name,
+      image,
+      description,
+      leagueId: selected?.id ?? null,
+    });
+
+    handleCloseModal();
   }
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Dialog as="div" className="relative z-10" onClose={handleCloseModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -138,6 +154,76 @@ export default function CreateTeamModal({
                           <p className="mt-3 text-sm leading-6 text-gray-600">
                             Write a few sentences about your team.
                           </p>
+                        </div>
+
+                        <div className="col-span-full">
+                          <label
+                            htmlFor="league"
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                          >
+                            League
+                          </label>
+                          <div className="mt-2">
+                            <Listbox value={selected} onChange={setSelected}>
+                              <div className="relative mt-1">
+                                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                  <span className="block truncate">
+                                    {selected?.name ?? "Select a league"}
+                                  </span>
+                                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                    <HiChevronUpDown
+                                      className="h-5 w-5 text-gray-400"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                </Listbox.Button>
+                                <Transition
+                                  as={Fragment}
+                                  leave="transition ease-in duration-100"
+                                  leaveFrom="opacity-100"
+                                  leaveTo="opacity-0"
+                                >
+                                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                    {leagues?.map((league, leagueIdx) => (
+                                      <Listbox.Option
+                                        key={leagueIdx}
+                                        className={({ active }) =>
+                                          `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                            active
+                                              ? "bg-green-100 text-green-900"
+                                              : "text-gray-900"
+                                          }`
+                                        }
+                                        value={league}
+                                      >
+                                        {({ selected }) => (
+                                          <>
+                                            <span
+                                              className={`block truncate ${
+                                                selected
+                                                  ? "font-medium"
+                                                  : "font-normal"
+                                              }`}
+                                            >
+                                              {league?.name}
+                                            </span>
+                                            {selected ? (
+                                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-green-600">
+                                                <HiCheck
+                                                  className="h-5 w-5"
+                                                  aria-hidden="true"
+                                                />
+                                              </span>
+                                            ) : null}
+                                          </>
+                                        )}
+                                      </Listbox.Option>
+                                    ))}
+                                  </Listbox.Options>
+                                </Transition>
+                              </div>
+                            </Listbox>
+                          </div>
                         </div>
                       </div>
                     </div>
