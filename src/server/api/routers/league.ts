@@ -71,7 +71,7 @@ export const leagueRouter = createTRPCRouter({
   getByPlayerId: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ input: { userId }, ctx }) => {
-      const userTeamIds = await ctx.db.team.findMany({
+      const playerTeamIds = await ctx.db.team.findMany({
         where: {
           players: {
             some: {
@@ -83,6 +83,17 @@ export const leagueRouter = createTRPCRouter({
           id: true,
         },
       });
+
+      const managerTeamIds = await ctx.db.team.findMany({
+        where: {
+          managerId: userId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const userTeamIds = [...playerTeamIds, ...managerTeamIds];
 
       const leagues = await ctx.db.league.findMany({
         where: {
