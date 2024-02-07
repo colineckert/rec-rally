@@ -47,7 +47,7 @@ const LeaguesPage: NextPage = (): JSX.Element => {
         </div>
       </header>
       <main>
-        <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
+        <div className="grid-row-2 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-2">
           <PlayerLeagues userId={user.id} />
         </div>
         {/* TODO: implement league posts */}
