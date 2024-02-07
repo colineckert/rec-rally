@@ -24,10 +24,10 @@ export default function EditTeamModal({
   const [description, setDescription] = useState(team?.description);
   const [league, setLeague] = useState(team?.league);
 
-  const { data: leagues } = api.league.getAll.useQuery();
-  const trpcUtils = api.useUtils();
-
   if (!team?.id) return null;
+
+  const trpcUtils = api.useUtils();
+  const { data: leagues } = api.league.getAll.useQuery();
 
   const editTeam = api.team.update.useMutation({
     onSuccess: async (updatedTeam: Team) => {
@@ -40,7 +40,6 @@ export default function EditTeamModal({
     event.preventDefault();
     if (!team) return;
 
-    // TODO: Add validation
     const name = (event.target as any).teamName.value;
     const image = (event.target as any).teamImageUrl.value || null;
     const description = (event.target as any).description.value || null;

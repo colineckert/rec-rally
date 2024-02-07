@@ -37,11 +37,10 @@ export default function CreateTeamModal({
   }
   async function handleCreateTeam(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
-    // TODO: Add validation
+
     const name = (event.target as any).teamName.value;
     const image = (event.target as any).teamImageUrl.value || null;
     const description = (event.target as any).description.value || null;
-
     await createTeam.mutateAsync({
       name,
       image,
