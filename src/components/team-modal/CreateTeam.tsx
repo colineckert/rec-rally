@@ -4,7 +4,6 @@ import type { League } from "@prisma/client";
 import { Fragment, useState, type SyntheticEvent } from "react";
 import { HiCheck } from "react-icons/hi";
 import { HiChevronUpDown } from "react-icons/hi2";
-import { set } from "zod";
 import { api } from "~/utils/api";
 
 type CreateTeamModalProps = {
@@ -20,7 +19,7 @@ export default function CreateTeamModal({
 }: CreateTeamModalProps) {
   const trpcUtils = api.useUtils();
   const createTeam = api.team.create.useMutation({
-    onSettled: async () => {
+    onSuccess: async () => {
       await trpcUtils.team.getManagerTeamsByUserId.refetch({
         userId: managerId,
       });
