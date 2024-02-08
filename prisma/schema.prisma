@@ -102,8 +102,9 @@ model User {
   follows   User[] @relation(name: "Followers")
 
   position     String?
-  managedTeams Team[]  @relation(name: "TeamManager")
-  playerTeams  Team[]  @relation(name: "TeamPlayers")
+  managedTeams Team[]         @relation(name: "TeamManager")
+  playerTeams  Team[]         @relation(name: "TeamPlayers")
+  PlayerInvite PlayerInvite[]
 }
 
 model VerificationToken {
@@ -122,14 +123,36 @@ model Team {
   managerId   String
   createdAt   DateTime @default(now())
 
-  manager  User    @relation(name: "TeamManager", fields: [managerId], references: [id], onDelete: Cascade)
-  players  User[]  @relation(name: "TeamPlayers")
-  league   League? @relation(fields: [leagueId], references: [id])
-  leagueId String?
+  manager      User           @relation(name: "TeamManager", fields: [managerId], references: [id], onDelete: Cascade)
+  players      User[]         @relation(name: "TeamPlayers")
+  league       League?        @relation(fields: [leagueId], references: [id])
+  leagueId     String?
+  PlayerInvite PlayerInvite[]
 
   @@unique([name, id])
   @@index([managerId])
   @@index([leagueId])
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model PlayerInvite {
+  id        String       @id @default(cuid())
+  teamId    String
+  playerId  String
+  createdAt DateTime     @default(now())
+  status    InviteStatus @default(PENDING)
+
+  team   Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  player User @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, playerId])
+  @@index([teamId])
+  @@index([playerId])
 }
 
 model League {
