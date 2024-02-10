@@ -1,10 +1,19 @@
 import { Menu, Transition } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
-import { HiChevronDown } from "react-icons/hi";
+import {
+  HiChevronDown,
+  HiPencilAlt,
+  HiOutlinePencilAlt,
+  HiOutlineUserAdd,
+  HiUserAdd,
+  HiOutlineTrash,
+  HiTrash,
+} from "react-icons/hi";
 import DeleteTeamModal from "./team-modal/DeleteTeam";
 import EditTeamModal from "./team-modal/EditTeam";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
+import InvitePlayersModal from "./team-modal/InvitePlayers";
 
 type ManageTeamDropdownProps = {
   team: inferProcedureOutput<AppRouter["team"]["getById"]>;
@@ -15,6 +24,7 @@ export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   return (
     <div className="text-right">
@@ -48,13 +58,13 @@ export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
-                      <EditActiveIcon
-                        className="mr-2 h-5 w-5"
+                      <HiPencilAlt
+                        className="mr-3 h-5 w-5 text-green-400"
                         aria-hidden="true"
                       />
                     ) : (
-                      <EditInactiveIcon
-                        className="mr-2 h-5 w-5"
+                      <HiOutlinePencilAlt
+                        className="mr-3 h-5 w-5 text-green-600"
                         aria-hidden="true"
                       />
                     )}
@@ -65,68 +75,23 @@ export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
               <Menu.Item>
                 {({ active }) => (
                   <button
+                    onClick={() => setIsInviteModalOpen(true)}
                     className={`${
                       active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
-                      <DuplicateActiveIcon
-                        className="mr-2 h-5 w-5"
+                      <HiUserAdd
+                        className="mr-3 h-5 w-5 text-green-400"
                         aria-hidden="true"
                       />
                     ) : (
-                      <DuplicateInactiveIcon
-                        className="mr-2 h-5 w-5"
+                      <HiOutlineUserAdd
+                        className="mr-3 h-5 w-5 text-green-600"
                         aria-hidden="true"
                       />
                     )}
                     Invite Players
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-            <div className="px-1 py-1">
-              {/* <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? "bg-slate-100 text-black" : "text-gray-900"
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <ArchiveActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <ArchiveInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Archive
-                  </button>
-                )}
-              </Menu.Item> */}
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? "bg-slate-100 text-black" : "text-gray-900"
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <MoveActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <MoveInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Change League
                   </button>
                 )}
               </Menu.Item>
@@ -141,13 +106,13 @@ export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
                     {active ? (
-                      <DeleteActiveIcon
-                        className="mr-2 h-5 w-5 text-green-400"
+                      <HiTrash
+                        className="mr-3 h-5 w-5 text-green-400"
                         aria-hidden="true"
                       />
                     ) : (
-                      <DeleteInactiveIcon
-                        className="mr-2 h-5 w-5 text-green-400"
+                      <HiOutlineTrash
+                        className="mr-3 h-5 w-5 text-green-600"
                         aria-hidden="true"
                       />
                     )}
@@ -159,239 +124,22 @@ export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
           </Menu.Items>
         </Transition>
       </Menu>
+      <EditTeamModal
+        team={team}
+        isOpen={isEditModalOpen}
+        closeModal={() => setIsEditModalOpen(false)}
+      />
+      <InvitePlayersModal
+        teamId={team.id}
+        isOpen={isInviteModalOpen}
+        closeModal={() => setIsInviteModalOpen(false)}
+      />
       <DeleteTeamModal
         teamId={team.id}
         teamName={team.name}
         isOpen={isDeleteModalOpen}
         closeModal={() => setIsDeleteModalOpen(false)}
       />
-      <EditTeamModal
-        team={team}
-        isOpen={isEditModalOpen}
-        closeModal={() => setIsEditModalOpen(false)}
-      />
     </div>
-  );
-}
-
-function EditInactiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#EDE9FE"
-        stroke="#23C55F"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
-
-function EditActiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#23C55F"
-        stroke="#8FD1A8"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
-
-function DuplicateInactiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#EDE9FE"
-        stroke="#23C55F"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#EDE9FE"
-        stroke="#23C55F"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
-
-function DuplicateActiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#23C55F"
-        stroke="#8FD1A8"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#23C55F"
-        stroke="#8FD1A8"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
-
-// function ArchiveInactiveIcon(props: React.ComponentProps<"svg">) {
-//   return (
-//     <svg
-//       {...props}
-//       viewBox="0 0 20 20"
-//       fill="none"
-//       xmlns="http://www.w3.org/2000/svg"
-//     >
-//       <rect
-//         x="5"
-//         y="8"
-//         width="10"
-//         height="8"
-//         fill="#EDE9FE"
-//         stroke="#23C55F"
-//         strokeWidth="2"
-//       />
-//       <rect
-//         x="4"
-//         y="4"
-//         width="12"
-//         height="4"
-//         fill="#EDE9FE"
-//         stroke="#23C55F"
-//         strokeWidth="2"
-//       />
-//       <path d="M8 12H12" stroke="#23C55F" strokeWidth="2" />
-//     </svg>
-//   );
-// }
-
-// function ArchiveActiveIcon(props: React.ComponentProps<"svg">) {
-//   return (
-//     <svg
-//       {...props}
-//       viewBox="0 0 20 20"
-//       fill="none"
-//       xmlns="http://www.w3.org/2000/svg"
-//     >
-//       <rect
-//         x="5"
-//         y="8"
-//         width="10"
-//         height="8"
-//         fill="#23C55F"
-//         stroke="#8FD1A8"
-//         strokeWidth="2"
-//       />
-//       <rect
-//         x="4"
-//         y="4"
-//         width="12"
-//         height="4"
-//         fill="#23C55F"
-//         stroke="#8FD1A8"
-//         strokeWidth="2"
-//       />
-//       <path d="M8 12H12" stroke="#8FD1A8" strokeWidth="2" />
-//     </svg>
-//   );
-// }
-
-function MoveInactiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#23C55F" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#23C55F" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#23C55F" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function MoveActiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#8FD1A8" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#8FD1A8" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#8FD1A8" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function DeleteInactiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#EDE9FE"
-        stroke="#23C55F"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#23C55F" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#23C55F" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function DeleteActiveIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#23C55F"
-        stroke="#8FD1A8"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#8FD1A8" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#8FD1A8" strokeWidth="2" />
-    </svg>
   );
 }
