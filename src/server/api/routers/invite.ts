@@ -40,7 +40,7 @@ export const inviteRouter = createTRPCRouter({
         throw new Error("Team not found");
       }
 
-      await Promise.all(
+      const invites = await Promise.all(
         playerIds.map((playerId) =>
           ctx.db.playerInvite.create({
             data: {
@@ -51,5 +51,7 @@ export const inviteRouter = createTRPCRouter({
           }),
         ),
       );
+
+      return invites;
     }),
 });
