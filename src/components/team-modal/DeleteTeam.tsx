@@ -28,8 +28,7 @@ export default function DeleteTeamModal({
   });
 
   function handleDeleteTeam() {
-    const deletedTeam = deleteTeam.mutate({ id: teamId });
-    console.log("Team Deleted", deletedTeam);
+    deleteTeam.mutate({ id: teamId });
     closeModal();
   }
 
