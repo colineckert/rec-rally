@@ -63,4 +63,25 @@ export const profileRouter = createTRPCRouter({
 
       return { addedFollow };
     }),
+  // ? should this be a profile or team procedure?
+  getAllNonTeamPlayers: protectedProcedure
+    .input(z.object({ teamId: z.string() }))
+    .query(async ({ input: { teamId }, ctx }) => {
+      const nonTeamPlayers = await ctx.db.user.findMany({
+        where: {
+          NOT: {
+            playerTeams: {
+              some: { id: teamId },
+            },
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      });
+
+      return nonTeamPlayers;
+    }),
 });
