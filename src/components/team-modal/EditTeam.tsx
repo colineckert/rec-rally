@@ -90,7 +90,7 @@ export default function EditTeamModal({
                     Update your team information.
                   </p>
                 </div>
-                <form onSubmit={handleUpdateTeam}>
+                <form id="team-edit-form" onSubmit={handleUpdateTeam}>
                   <div className="space-y-12">
                     <div className="border-b border-gray-900/10 pb-12">
                       <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">

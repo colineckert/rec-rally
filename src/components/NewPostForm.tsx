@@ -77,6 +77,7 @@ function Form() {
 
   return (
     <form
+      id="new-post-form"
       onSubmit={handleSubmit}
       className="flex flex-col gap-2 border-b px-4 py-2"
     >

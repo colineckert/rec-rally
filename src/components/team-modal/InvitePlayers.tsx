@@ -78,7 +78,7 @@ export default function InvitePlayersModal({
                     Send invites to players to join your team.
                   </p>
                 </div>
-                <form onSubmit={handleCreateInvites}>
+                <form id="player-invite-form" onSubmit={handleCreateInvites}>
                   <div className="space-y-12">
                     <div className="border-b border-gray-900/10 pb-12">
                       <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
