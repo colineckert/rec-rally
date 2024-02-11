@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fragment, useState, type SyntheticEvent } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
-import type { User } from "@prisma/client";
 import { HiCheck } from "react-icons/hi";
 import { HiChevronUpDown } from "react-icons/hi2";
 import { api } from "~/utils/api";
+import type { User } from "@prisma/client";
 
-type CreateTeamModalProps = {
+type InvitePlayersModalProps = {
   teamId: string;
   isOpen: boolean;
   closeModal: () => void;
@@ -16,31 +16,48 @@ export default function InvitePlayersModal({
   teamId,
   isOpen,
   closeModal,
-}: CreateTeamModalProps) {
-  const [selected, setSelected] = useState<User[]>([]);
+}: InvitePlayersModalProps) {
+  const [seletectIds, setSelectedIds] = useState<string[]>([]);
   const [query, setQuery] = useState("");
 
+  // TODO: sort names alphabetically
   const { data: availablePlayers } = api.profile.getAllNonTeamPlayers.useQuery({
     teamId,
   });
 
+  const filteredPlayers =
+    query === ""
+      ? availablePlayers
+      : availablePlayers?.filter(
+          (player) =>
+            player.name &&
+            player.name
+              .toLowerCase()
+              .replace(/\s+/g, "")
+              .includes(query.toLowerCase().replace(/\s+/g, "")),
+        );
+
   const createPlayerInvites = api.invite.create.useMutation({
     onSuccess: (invites) => {
-      console.log("invites", invites);
+      console.log("invites created", invites);
     },
   });
 
+  function handlePlayerSelect(player: Pick<User, "id" | "name">) {
+    if (seletectIds.some((id) => id === player.id)) {
+      return setSelectedIds(seletectIds.filter((id) => id !== player.id));
+    }
+    return setSelectedIds([...seletectIds, player.id]);
+  }
+
   function handleCloseModal() {
-    setSelected([]);
+    setSelectedIds([]);
     closeModal();
   }
 
   function handleCreateInvites(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    const playerIds = selected.map((player) => player.id);
-    createPlayerInvites.mutate({ teamId, playerIds });
-
+    createPlayerInvites.mutate({ teamId, playerIds: seletectIds });
     handleCloseModal();
   }
 
@@ -87,18 +104,21 @@ export default function InvitePlayersModal({
                     <div className="mt-10 grid grid-cols-1 gap-x-4 gap-y-4">
                       <div className="col-span-full">
                         <label
-                          htmlFor="league"
+                          htmlFor="players"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
                           Select Players
                         </label>
                         <div className="mt-2">
-                          <Combobox value={selected} onChange={setSelected}>
+                          <Combobox onChange={handlePlayerSelect}>
                             <div className="relative mt-1">
                               <div className="relative w-full cursor-default rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-green-300 sm:text-sm">
                                 <Combobox.Input
                                   className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                                  displayValue={(person) => person.name}
+                                  placeholder="Search players..."
+                                  // displayValue={(player: User) =>
+                                  //   player?.name ?? ""
+                                  // }
                                   onChange={(event) =>
                                     setQuery(event.target.value)
                                   }
@@ -118,15 +138,15 @@ export default function InvitePlayersModal({
                                 afterLeave={() => setQuery("")}
                               >
                                 <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                                  {availablePlayers?.length === 0 &&
+                                  {filteredPlayers?.length === 0 &&
                                   query !== "" ? (
                                     <div className="relative cursor-default select-none px-4 py-2 text-gray-700">
-                                      Nothing found.
+                                      No matches.
                                     </div>
                                   ) : (
-                                    availablePlayers?.map((person) => (
+                                    filteredPlayers?.map((player) => (
                                       <Combobox.Option
-                                        key={person.id}
+                                        key={player.id}
                                         className={({ active }) =>
                                           `relative cursor-default select-none py-2 pl-10 pr-4 ${
                                             active
@@ -134,35 +154,40 @@ export default function InvitePlayersModal({
                                               : "text-gray-900"
                                           }`
                                         }
-                                        value={person}
+                                        value={player}
                                       >
-                                        {({ selected, active }) => (
-                                          <>
-                                            <span
-                                              className={`block truncate ${
-                                                selected
-                                                  ? "font-medium"
-                                                  : "font-normal"
-                                              }`}
-                                            >
-                                              {person.name}
-                                            </span>
-                                            {selected ? (
+                                        {({ active }) => {
+                                          const selected = seletectIds.some(
+                                            (id) => id === player.id,
+                                          );
+                                          return (
+                                            <>
                                               <span
-                                                className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                                  active
-                                                    ? "text-white"
-                                                    : "text-green-600"
+                                                className={`block truncate ${
+                                                  selected
+                                                    ? "font-medium"
+                                                    : "font-normal"
                                                 }`}
                                               >
-                                                <HiCheck
-                                                  className="h-5 w-5"
-                                                  aria-hidden="true"
-                                                />
+                                                {player.name}
                                               </span>
-                                            ) : null}
-                                          </>
-                                        )}
+                                              {selected ? (
+                                                <span
+                                                  className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                                    active
+                                                      ? "bg-green-100 text-green-900"
+                                                      : "text-gray-900"
+                                                  }`}
+                                                >
+                                                  <HiCheck
+                                                    className="h-5 w-5 text-green-500"
+                                                    aria-hidden="true"
+                                                  />
+                                                </span>
+                                              ) : null}
+                                            </>
+                                          );
+                                        }}
                                       </Combobox.Option>
                                     ))
                                   )}
@@ -177,7 +202,7 @@ export default function InvitePlayersModal({
                   <div className="mt-6 flex items-center justify-end gap-x-6">
                     <button
                       type="button"
-                      onClick={closeModal}
+                      onClick={handleCloseModal}
                       className="text-sm font-semibold leading-6 text-gray-900"
                     >
                       Cancel
