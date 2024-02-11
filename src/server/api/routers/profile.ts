@@ -10,7 +10,7 @@ export const profileRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id }, ctx }) => {
-      const currentUserId = ctx.session?.user.id;
+      const currentUserId = ctx.session?.user?.id;
       const profile = await ctx.db.user.findUnique({
         where: { id },
         select: {
@@ -78,7 +78,6 @@ export const profileRouter = createTRPCRouter({
         select: {
           id: true,
           name: true,
-          image: true,
         },
       });
 
