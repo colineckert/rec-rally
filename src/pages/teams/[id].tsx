@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import ManageTeamDropdown from "~/components/ManageTeamDropdown";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import { getPlural } from "~/utils/formatters";
+import { LoadingSpinner } from "~/components/LoadingSpinner";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -32,6 +33,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   if (!team) return <ErrorPage statusCode={404} />;
 
   const { name, image, description, manager, playersCount, league } = team;
+  const isManager = currentUserId === manager.id;
 
   return (
     <>
@@ -57,7 +59,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
           </div>
         </div>
-        {currentUserId === team.manager.id && (
+        {isManager && (
           <div className="py-3 sm:py-0">
             <ManageTeamDropdown team={team} />
           </div>
@@ -92,6 +94,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
           </div>
           <TeamPlayers players={team.players} />
+          {isManager && <TeamInvites teamId={team.id} />}
         </div>
         <InfinitePostList
           posts={posts.data?.pages?.flatMap((page) => page.posts) ?? []}
@@ -130,6 +133,44 @@ function TeamPlayers({
               href={`/profiles/${player.id}`}
               image={player.image}
               title={player.name}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function TeamInvites({ teamId }: { teamId: string }) {
+  const { data: invites, isLoading } = api.invite.getPendingByTeamId.useQuery({
+    teamId,
+  });
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (invites?.length === 0) {
+    return (
+      <div className="px-2">
+        <h3 className="pb-2 text-lg font-bold">Invites</h3>
+        <div className="rounded border border-gray-100 bg-gray-50 py-6 text-center text-gray-500">
+          No pending invites.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-2">
+      <h3 className="pb-2 text-lg font-bold">Invites</h3>
+      <ul>
+        {invites?.map((invite) => (
+          <li key={invite.id} className="my-2 first:mt-0 last:mb-0">
+            <LinkItemCard
+              href={`/profiles/${invite.player.id}`}
+              image={invite.player.image}
+              title={invite.player.name}
             />
           </li>
         ))}
