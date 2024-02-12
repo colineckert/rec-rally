@@ -13,6 +13,7 @@ import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
 import CreateTeamModal from "~/components/team-modal/CreateTeam";
 import { LinkItemCard } from "~/components/LinkItemCard";
+import { InviteStatus } from "@prisma/client";
 
 const TeamsPage: NextPage = (): JSX.Element => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -55,24 +56,7 @@ const TeamsPage: NextPage = (): JSX.Element => {
         <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
           <ManagedTeams userId={user.id} />
           <PlayerTeams userId={user.id} />
-          <div className="px-2">
-            <h3 className="pb-2 text-lg font-bold">Invites</h3>
-            <ul>
-              <li className="rounded-md border hover:bg-slate-100">
-                <div className="flex items-center justify-between p-2">
-                  <Link className="flex-grow pl-1" href={`/teams/1`}>
-                    Chelsea
-                  </Link>
-                  <Button className="mr-2">
-                    <HiCheck />
-                  </Button>
-                  <Button className="bg-red-500 p-1 hover:bg-red-400 focus-visible:bg-red-400">
-                    <HiX />
-                  </Button>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <TeamInvites userId={user.id} />
         </div>
         <MyTeamsPosts />
       </main>
@@ -149,6 +133,77 @@ function PlayerTeams({ userId }: { userId: string }) {
               title={team.name}
               subtitle={team.league?.name}
             />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function TeamInvites({ userId }: { userId: string }) {
+  const trpcUtils = api.useUtils();
+  const {
+    data: invites,
+    isLoading,
+    isFetching,
+  } = api.invite.getPendingByUserId.useQuery();
+  const updateInvite = api.invite.update.useMutation({
+    onSuccess: async () => {
+      await trpcUtils.invite.getPendingByUserId.refetch();
+    },
+  });
+  const addPlayer = api.team.addPlayer.useMutation({
+    onSuccess: async () => {
+      await trpcUtils.team.getPlayerTeamsByUserId.refetch();
+    },
+  });
+
+  if (isLoading || isFetching) {
+    return <LoadingSpinner />;
+  }
+
+  if (invites?.length === 0) {
+    return null;
+  }
+
+  function accept(inviteId: string, teamId: string) {
+    updateInvite.mutate({ id: inviteId, response: InviteStatus.ACCEPTED });
+    addPlayer.mutate({ teamId, playerId: userId });
+  }
+
+  function decline(inviteId: string) {
+    updateInvite.mutate({ id: inviteId, response: InviteStatus.DECLINED });
+  }
+
+  return (
+    <div className="px-2">
+      <h3 className="pb-2 text-lg font-bold">Invites</h3>
+      <ul>
+        {invites?.map((invite) => (
+          <li
+            key={invite.id}
+            className="my-2 rounded-md border first:mt-0 last:mb-0 hover:bg-slate-100"
+          >
+            <div className="flex items-center justify-between p-2">
+              <Link
+                className="flex-grow pl-1"
+                href={`/teams/${invite.team.id}`}
+              >
+                {invite.team.name}
+              </Link>
+              <Button
+                className="mr-2"
+                onClick={() => accept(invite.id, invite.team.id)}
+              >
+                <HiCheck />
+              </Button>
+              <Button
+                className="bg-red-500 p-1 hover:bg-red-400 focus-visible:bg-red-400"
+                onClick={() => decline(invite.id)}
+              >
+                <HiX />
+              </Button>
+            </div>
           </li>
         ))}
       </ul>
