@@ -3,7 +3,8 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { InviteStatus } from "@prisma/client";
 
 export const inviteRouter = createTRPCRouter({
-  getByUserId: protectedProcedure.query(async ({ ctx }) => {
+  getPendingByUserId: protectedProcedure.query(async ({ ctx }) => {
+    // only ever going to show current user's invites
     const currentUserId = ctx.session?.user?.id;
 
     const invites = await ctx.db.playerInvite.findMany({
@@ -20,16 +21,20 @@ export const inviteRouter = createTRPCRouter({
       },
     });
 
-    return invites.map((invite) => ({
+    const pendingInvites = invites.filter(
+      (invite) => invite.status === InviteStatus.PENDING,
+    );
+
+    return pendingInvites.map((invite) => ({
       id: invite.id,
+      status: invite.status,
       team: {
         id: invite.team.id,
         name: invite.team.name,
-        status: invite.status,
       },
     }));
   }),
-  getByTeamId: protectedProcedure
+  getPendingByTeamId: protectedProcedure
     .input(z.object({ teamId: z.string() }))
     .query(async ({ input: { teamId }, ctx }) => {
       const currentUserId = ctx.session?.user?.id;
@@ -65,7 +70,11 @@ export const inviteRouter = createTRPCRouter({
         },
       });
 
-      return invites.map((invite) => ({
+      const pendingInvites = invites.filter(
+        (invite) => invite.status === InviteStatus.PENDING,
+      );
+
+      return pendingInvites.map((invite) => ({
         id: invite.id,
         status: invite.status,
         player: {
@@ -100,5 +109,29 @@ export const inviteRouter = createTRPCRouter({
       );
 
       return invites;
+    }),
+  update: protectedProcedure
+    .input(z.object({ id: z.string(), response: z.string() }))
+    .mutation(async ({ input: { id, response }, ctx }) => {
+      const invite = await ctx.db.playerInvite.findUnique({
+        where: { id },
+        select: { id: true, status: true },
+      });
+
+      if (invite == null) {
+        throw new Error("Invite not found");
+      }
+
+      if (invite.status !== InviteStatus.PENDING) {
+        throw new Error("Invite has already been responded to");
+      }
+
+      const updatedInvite = await ctx.db.playerInvite.update({
+        where: { id },
+        data: { status: response as InviteStatus },
+        select: { id: true, status: true },
+      });
+
+      return updatedInvite;
     }),
 });
