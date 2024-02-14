@@ -111,8 +111,8 @@ export const inviteRouter = createTRPCRouter({
       return invites;
     }),
   update: protectedProcedure
-    .input(z.object({ id: z.string(), response: z.string() }))
-    .mutation(async ({ input: { id, response }, ctx }) => {
+    .input(z.object({ id: z.string(), status: z.string() }))
+    .mutation(async ({ input: { id, status }, ctx }) => {
       const invite = await ctx.db.playerInvite.findUnique({
         where: { id },
         select: { id: true, status: true },
@@ -128,7 +128,7 @@ export const inviteRouter = createTRPCRouter({
 
       const updatedInvite = await ctx.db.playerInvite.update({
         where: { id },
-        data: { status: response as InviteStatus },
+        data: { status: status as InviteStatus },
         select: { id: true, status: true },
       });
 

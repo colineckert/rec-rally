@@ -167,12 +167,12 @@ function TeamInvites({ userId }: { userId: string }) {
   }
 
   function accept(inviteId: string, teamId: string) {
-    updateInvite.mutate({ id: inviteId, response: InviteStatus.ACCEPTED });
+    updateInvite.mutate({ id: inviteId, status: InviteStatus.ACCEPTED });
     addPlayer.mutate({ teamId, playerId: userId });
   }
 
   function decline(inviteId: string) {
-    updateInvite.mutate({ id: inviteId, response: InviteStatus.DECLINED });
+    updateInvite.mutate({ id: inviteId, status: InviteStatus.DECLINED });
   }
 
   return (
