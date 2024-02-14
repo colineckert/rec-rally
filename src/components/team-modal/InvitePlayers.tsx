@@ -20,6 +20,8 @@ export default function InvitePlayersModal({
   const [seletectIds, setSelectedIds] = useState<string[]>([]);
   const [query, setQuery] = useState("");
 
+  const trpcUtils = api.useUtils();
+
   // TODO: sort names alphabetically
   const { data: availablePlayers } = api.profile.getAllNonTeamPlayers.useQuery({
     teamId,
@@ -38,8 +40,8 @@ export default function InvitePlayersModal({
         );
 
   const createPlayerInvites = api.invite.create.useMutation({
-    onSuccess: (invites) => {
-      console.log("invites created", invites);
+    onSuccess: async () => {
+      await trpcUtils.invite.getPendingByTeamId.refetch({ teamId });
     },
   });
 
