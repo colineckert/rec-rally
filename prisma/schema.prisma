@@ -138,7 +138,7 @@ enum InviteStatus {
   PENDING
   ACCEPTED
   DECLINED
-  CANCELLED
+  CANCELED
 }
 
 model PlayerInvite {
