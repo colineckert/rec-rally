@@ -10,7 +10,7 @@ import { ssgHelper } from "~/server/api/ssgHelper";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
-import { HiArrowLeft } from "react-icons/hi";
+import { HiArrowLeft, HiOutlineMinusCircle } from "react-icons/hi";
 import { ProfileImage } from "~/components/ProfileImage";
 import { InfinitePostList } from "~/components/InfinitePostList";
 import { useSession } from "next-auth/react";
@@ -18,6 +18,7 @@ import ManageTeamDropdown from "~/components/ManageTeamDropdown";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import { getPlural } from "~/utils/formatters";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
+import { InviteStatus } from "@prisma/client";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -142,9 +143,20 @@ function TeamPlayers({
 }
 
 function TeamInvites({ teamId }: { teamId: string }) {
+  const trpcUtils = api.useUtils();
   const { data: invites, isLoading } = api.invite.getPendingByTeamId.useQuery({
     teamId,
   });
+
+  const updateInvite = api.invite.update.useMutation({
+    onSuccess: async () => {
+      await trpcUtils.invite.getPendingByTeamId.invalidate({ teamId });
+    },
+  });
+
+  function handleInviteCancel(id: string) {
+    updateInvite.mutate({ id, status: InviteStatus.CANCELED });
+  }
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -171,6 +183,11 @@ function TeamInvites({ teamId }: { teamId: string }) {
               href={`/profiles/${invite.player.id}`}
               image={invite.player.image}
               title={invite.player.name}
+              children={
+                <button onClick={() => handleInviteCancel(invite.id)}>
+                  <HiOutlineMinusCircle className="h-8 w-8 text-gray-400 hover:text-gray-500" />
+                </button>
+              }
             />
           </li>
         ))}
