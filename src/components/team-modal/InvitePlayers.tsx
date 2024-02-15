@@ -19,13 +19,21 @@ export default function InvitePlayersModal({
 }: InvitePlayersModalProps) {
   const [seletectIds, setSelectedIds] = useState<string[]>([]);
   const [query, setQuery] = useState("");
-
   const trpcUtils = api.useUtils();
-
-  // TODO: sort names alphabetically
-  const { data: availablePlayers } = api.profile.getAllNonTeamPlayers.useQuery({
+  const { data: nonTeamPlayers } = api.profile.getAllNonTeamPlayers.useQuery({
     teamId,
   });
+  const { data: pendingInvites } = api.invite.getPendingByTeamId.useQuery({
+    teamId,
+  });
+
+  const availablePlayers = nonTeamPlayers
+    ?.filter(
+      (player) =>
+        Boolean(player.name) &&
+        !pendingInvites?.some((invite) => invite.player.id === player.id),
+    )
+    .sort((a, b) => (a.name && b.name ? a.name.localeCompare(b.name) : 0));
 
   const filteredPlayers =
     query === ""
@@ -118,9 +126,9 @@ export default function InvitePlayersModal({
                                 <Combobox.Input
                                   className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
                                   placeholder="Search players..."
-                                  // displayValue={(player: User) =>
-                                  //   player?.name ?? ""
-                                  // }
+                                  displayValue={(player: User) =>
+                                    player?.name ?? ""
+                                  }
                                   onChange={(event) =>
                                     setQuery(event.target.value)
                                   }
