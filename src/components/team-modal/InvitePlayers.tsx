@@ -41,7 +41,7 @@ export default function InvitePlayersModal({
 
   const createPlayerInvites = api.invite.create.useMutation({
     onSuccess: async () => {
-      await trpcUtils.invite.getPendingByTeamId.refetch({ teamId });
+      await trpcUtils.invite.getPendingByTeamId.invalidate({ teamId });
     },
   });
 

@@ -31,7 +31,7 @@ export default function EditTeamModal({
 
   const editTeam = api.team.update.useMutation({
     onSuccess: async (updatedTeam: Team) => {
-      await trpcUtils.team.getById.refetch({ id: updatedTeam.id });
+      await trpcUtils.team.getById.invalidate({ id: updatedTeam.id });
     },
   });
 

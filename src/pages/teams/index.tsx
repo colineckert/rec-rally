@@ -149,12 +149,12 @@ function TeamInvites({ userId }: { userId: string }) {
   } = api.invite.getPendingByUserId.useQuery();
   const updateInvite = api.invite.update.useMutation({
     onSuccess: async () => {
-      await trpcUtils.invite.getPendingByUserId.refetch();
+      await trpcUtils.invite.getPendingByUserId.invalidate();
     },
   });
   const addPlayer = api.team.addPlayer.useMutation({
     onSuccess: async () => {
-      await trpcUtils.team.getPlayerTeamsByUserId.refetch();
+      await trpcUtils.team.getPlayerTeamsByUserId.invalidate();
     },
   });
 

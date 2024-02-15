@@ -20,7 +20,7 @@ export default function CreateTeamModal({
   const trpcUtils = api.useUtils();
   const createTeam = api.team.create.useMutation({
     onSuccess: async () => {
-      await trpcUtils.team.getManagerTeamsByUserId.refetch({
+      await trpcUtils.team.getManagerTeamsByUserId.invalidate({
         userId: managerId,
       });
     },
