@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type {
   GetStaticPaths,
   GetStaticPropsContext,
@@ -19,10 +20,13 @@ import { LinkItemCard } from "~/components/LinkItemCard";
 import { getPlural } from "~/utils/formatters";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InviteStatus } from "@prisma/client";
+import { Button } from "~/components/Button";
+import LeaveTeamModal from "~/components/team-modal/LeaveTeam";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
+  const [leaveTeamModalOpen, setLeaveTeamModalOpen] = useState(false);
   const session = useSession();
   const currentUserId = session.data?.user?.id;
   const { data: team } = api.team.getById.useQuery({ id });
@@ -60,11 +64,15 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
           </div>
         </div>
-        {isManager && (
-          <div className="py-3 sm:py-0">
+        <div className="py-3 sm:py-0">
+          {isManager ? (
             <ManageTeamDropdown team={team} />
-          </div>
-        )}
+          ) : (
+            <Button gray onClick={() => setLeaveTeamModalOpen(true)}>
+              Leave Team
+            </Button>
+          )}
+        </div>
       </header>
       <main>
         <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
@@ -105,6 +113,12 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           fetchNewPosts={posts.fetchNextPage}
         />
       </main>
+      <LeaveTeamModal
+        teamId={id}
+        teamName={name}
+        isOpen={leaveTeamModalOpen}
+        closeModal={() => setLeaveTeamModalOpen(false)}
+      />
     </>
   );
 };
