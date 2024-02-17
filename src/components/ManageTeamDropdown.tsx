@@ -31,7 +31,7 @@ export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex w-full justify-center rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400 focus:outline-none focus-visible:bg-green-400 focus-visible:ring-2 focus-visible:ring-white/75">
-            Manage Team
+            Manage
             <HiChevronDown
               className="-mr-1 ml-2 h-5 w-5 text-green-200 hover:text-green-100"
               aria-hidden="true"
