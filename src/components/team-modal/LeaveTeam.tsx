@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef } from "react";
+import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { HiExclamation } from "react-icons/hi";
 
@@ -17,16 +18,19 @@ export default function LeaveTeamModal({
   closeModal,
 }: LeaveTeamModalProps) {
   const cancelButtonRef = useRef(null);
-  // const deleteTeam = api.team.delete.useMutation({
-  //   onSuccess: () => {
-  //     router.push("/teams").catch((err) => {
-  //       console.log(err);
-  //     });
-  //   },
-  // });
+  const session = useSession();
+  const trpcUtils = api.useUtils();
+  const removePlayer = api.team.removePlayer.useMutation({
+    onSuccess: async () => {
+      await trpcUtils.team.getById.invalidate({ id: teamId });
+      await trpcUtils.invite.getPendingByTeamId.invalidate({ teamId });
+    },
+  });
 
   function handleLeaveTeam() {
-    console.log("Leave team");
+    const userId = session.data?.user?.id;
+    if (!userId) return;
+    removePlayer.mutate({ teamId, playerId: userId });
     closeModal();
   }
 

@@ -39,6 +39,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
   const { name, image, description, manager, playersCount, league } = team;
   const isManager = currentUserId === manager.id;
+  const isPlayer = team.players.some((player) => player.id === currentUserId);
 
   return (
     <>
@@ -64,14 +65,13 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
           </div>
         </div>
-        <div className="py-3 sm:py-0">
-          {isManager ? (
-            <ManageTeamDropdown team={team} />
-          ) : (
+        <div className="flex gap-2 py-3 sm:py-0">
+          {isPlayer && (
             <Button gray onClick={() => setLeaveTeamModalOpen(true)}>
-              Leave Team
+              Leave
             </Button>
           )}
+          {isManager && <ManageTeamDropdown team={team} />}
         </div>
       </header>
       <main>
