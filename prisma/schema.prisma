@@ -151,7 +151,7 @@ model PlayerInvite {
   team   Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
   player User @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
-  @@unique([teamId, playerId])
+  @@unique([teamId, playerId, createdAt])
   @@index([teamId])
   @@index([playerId])
 }
