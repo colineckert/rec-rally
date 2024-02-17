@@ -212,4 +212,36 @@ export const teamRouter = createTRPCRouter({
 
       return true;
     }),
+  removePlayer: protectedProcedure
+    .input(z.object({ teamId: z.string(), playerId: z.string() }))
+    .mutation(async ({ input: { teamId, playerId }, ctx }) => {
+      const team = await ctx.db.team.findUnique({
+        where: { id: teamId },
+        select: { id: true },
+      });
+
+      if (team == null) {
+        throw new Error("Team not found");
+      }
+
+      const player = await ctx.db.user.findUnique({
+        where: { id: playerId },
+        select: { id: true },
+      });
+
+      if (player == null) {
+        throw new Error("Player not found");
+      }
+
+      await ctx.db.team.update({
+        where: { id: teamId },
+        data: {
+          players: {
+            disconnect: { id: playerId },
+          },
+        },
+      });
+
+      return true;
+    }),
 });
