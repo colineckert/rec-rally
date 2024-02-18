@@ -6,24 +6,9 @@ import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "./LoadingSpinner";
-
-type Post = {
-  id: string;
-  content: string;
-  type: "SOCIAL" | "GAME_RECAP" | "GAME_INVITE";
-  createdAt: Date;
-  likeCount: number;
-  likedByMe: boolean;
-  user: {
-    id: string;
-    image: string | null;
-    name: string | null;
-  };
-  homeTeamId: string | null;
-  awayTeamId: string | null;
-  homeScore: number | null;
-  awayScore: number | null;
-};
+import GameRecap from "./GameRecap";
+import type { Post } from "~/types/post";
+import { getFormattedDate } from "~/utils/formatters";
 
 type InfinitePostListProps = {
   isLoading: boolean;
@@ -58,7 +43,7 @@ export function InfinitePostList({
         loader={<LoadingSpinner />}
       >
         {/* TODO: remove this test post */}
-        <GameRecapListItem
+        <GameRecap
           key="test-recap"
           type="GAME_RECAP"
           user={{
@@ -78,19 +63,13 @@ export function InfinitePostList({
         />
         {posts.map((post) => {
           if (post.type === "GAME_RECAP") {
-            return <GameRecapListItem key={post.id} {...post} />;
+            return <GameRecap key={post.id} {...post} />;
           }
           return <PostListItem key={post.id} {...post} />;
         })}
       </InfiniteScroll>
     </ul>
   );
-}
-
-function getFormattedDate(date: Date, type: "short" | "long") {
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: type,
-  }).format(date);
 }
 
 function PostListItem({
@@ -167,113 +146,12 @@ function PostListItem({
           </span>
         </div>
         <p className="whitespace-pre-wrap">{content}</p>
-        <HearButton
+        <HeartButton
           onClick={handleToggleLike}
           isLoading={toggleLike.isLoading}
           likedByMe={likedByMe}
           likeCount={likeCount}
         />
-      </div>
-    </li>
-  );
-}
-
-function GameRecapListItem({
-  id,
-  user,
-  // homeTeamId,
-  // awayTeamId,
-  homeScore,
-  awayScore,
-  createdAt,
-  likeCount,
-  likedByMe,
-}: Post) {
-  const trpcUtils = api.useUtils();
-  const toggleLike = api.post.toggleLike.useMutation({
-    onSuccess: async ({ addedLike }) => {
-      const updateData: Parameters<
-        typeof trpcUtils.post.infiniteFeed.setInfiniteData
-      >[1] = (oldData) => {
-        if (oldData == null) return;
-
-        const coundModifier = addedLike ? 1 : -1;
-
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page) => {
-            return {
-              ...page,
-              posts: page.posts.map((post) => {
-                if (post.id === id) {
-                  return {
-                    ...post,
-                    likeCount: post.likeCount + coundModifier,
-                    likedByMe: addedLike,
-                  };
-                }
-
-                return post;
-              }),
-            };
-          }),
-        };
-      };
-
-      trpcUtils.post.infiniteFeed.setInfiniteData({}, updateData);
-      trpcUtils.post.infiniteFeed.setInfiniteData(
-        { onlyFollowing: true },
-        updateData,
-      );
-      trpcUtils.post.infiniteProfileFeed.setInfiniteData(
-        { userId: user.id },
-        updateData,
-      );
-    },
-  });
-
-  function handleToggleLike() {
-    toggleLike.mutate({ id });
-  }
-
-  // TODO: get team names from id
-
-  // TODO: try using a grid layout for this
-  return (
-    <li key={id} className="flex gap-4 border-b px-4 py-4">
-      <div className="flex flex-grow flex-col">
-        <span className="self-center text-gray-500">
-          {getFormattedDate(createdAt, "long")}
-        </span>
-        <div className="flex flex-row justify-center gap-14 py-4">
-          <Link
-            href={`/`}
-            className="font-bold hover:underline focus-visible:underline"
-          >
-            Arsenal
-          </Link>
-          <div />
-          <Link
-            href={`/`}
-            className="font-bold hover:underline focus-visible:underline"
-          >
-            Chelsea
-          </Link>
-          {/* TODO: add images for teams */}
-        </div>
-        <div className="flex flex-row justify-center gap-20">
-          <span className="font-bold">{homeScore}</span>
-          <span className="text-gray-500">-</span>
-          <span className="font-bold">{awayScore}</span>
-        </div>
-        <div className="self-end">
-          <HearButton
-            onClick={handleToggleLike}
-            isLoading={toggleLike.isLoading}
-            likedByMe={likedByMe}
-            likeCount={likeCount}
-          />
-        </div>
       </div>
     </li>
   );
@@ -286,7 +164,7 @@ type HeartButtonProps = {
   likeCount: number;
 };
 
-function HearButton({
+function HeartButton({
   onClick,
   isLoading,
   likedByMe,
