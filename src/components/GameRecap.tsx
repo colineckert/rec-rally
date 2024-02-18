@@ -3,7 +3,7 @@ import type { Post } from "~/types/post";
 import { api } from "~/utils/api";
 import { getFormattedDate } from "~/utils/formatters";
 
-function GameRecap({
+export function GameRecap({
   id,
   user,
   // homeTeamId,
@@ -46,17 +46,7 @@ function GameRecap({
           <span className="text-gray-500">-</span>
           <span className="font-bold">{awayScore}</span>
         </div>
-        {/* <div className="self-end"> */}
-        {/*   <HeartButton */}
-        {/*     onClick={handleToggleLike} */}
-        {/*     isLoading={toggleLike.isLoading} */}
-        {/*     likedByMe={likedByMe} */}
-        {/*     likeCount={likeCount} */}
-        {/*   /> */}
-        {/* </div> */}
       </div>
     </li>
   );
 }
-
-export default GameRecap;

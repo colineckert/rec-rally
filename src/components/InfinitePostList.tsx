@@ -6,7 +6,7 @@ import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "./LoadingSpinner";
-import GameRecap from "./GameRecap";
+import { GameRecap } from "./GameRecap";
 import type { Post } from "~/types/post";
 import { getFormattedDate } from "~/utils/formatters";
 
