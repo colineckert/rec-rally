@@ -15,57 +15,12 @@ function GameRecap({
   likedByMe,
 }: Post) {
   const trpcUtils = api.useUtils();
-  const toggleLike = api.post.toggleLike.useMutation({
-    onSuccess: async ({ addedLike }) => {
-      const updateData: Parameters<
-        typeof trpcUtils.post.infiniteFeed.setInfiniteData
-      >[1] = (oldData) => {
-        if (oldData == null) return;
-
-        const coundModifier = addedLike ? 1 : -1;
-
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page) => {
-            return {
-              ...page,
-              posts: page.posts.map((post) => {
-                if (post.id === id) {
-                  return {
-                    ...post,
-                    likeCount: post.likeCount + coundModifier,
-                    likedByMe: addedLike,
-                  };
-                }
-
-                return post;
-              }),
-            };
-          }),
-        };
-      };
-
-      trpcUtils.post.infiniteFeed.setInfiniteData({}, updateData);
-      trpcUtils.post.infiniteFeed.setInfiniteData(
-        { onlyFollowing: true },
-        updateData,
-      );
-      trpcUtils.post.infiniteProfileFeed.setInfiniteData(
-        { userId: user.id },
-        updateData,
-      );
-    },
-  });
-
-  function handleToggleLike() {
-    toggleLike.mutate({ id });
-  }
 
   // TODO: get team names from id
 
   // TODO: try using a grid layout for this
   return (
-    <li key={id} className="flex gap-4 border-b px-4 py-4">
+    <li key={id} className="flex gap-4 border-b px-4 py-6">
       <div className="flex flex-grow flex-col">
         <span className="self-center text-gray-500">
           {getFormattedDate(createdAt, "long")}
