@@ -53,13 +53,14 @@ export function InfinitePostList({
           }}
           id="test-recap"
           content=""
-          homeTeamId="Arsenal"
-          awayTeamId="Chelsea"
+          homeTeamId="clsagg4wp0001xl4brprvdhx8"
+          awayTeamId="cl9ebqhxk00003b600tymyt01"
           homeScore={2}
           awayScore={1}
           createdAt={new Date()}
           likeCount={1}
           likedByMe={false}
+          leagueId="cl9ebqhxk00003b600tymyl01"
         />
         {posts.map((post) => {
           if (post.type === "GAME_RECAP") {

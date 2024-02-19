@@ -189,6 +189,7 @@ async function getInfinitePosts({
       awayTeamId: true,
       homeScore: true,
       awayScore: true,
+      leagueId: true,
     },
   });
 
@@ -214,6 +215,7 @@ async function getInfinitePosts({
         awayTeamId: post.awayTeamId,
         homeScore: post.homeScore,
         awayScore: post.awayScore,
+        leagueId: post.leagueId,
       };
     }),
     nextCursor,
