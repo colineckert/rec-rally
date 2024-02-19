@@ -14,4 +14,5 @@ export type Post = {
   awayTeamId: string | null;
   homeScore: number | null;
   awayScore: number | null;
+  leagueId: string | null;
 };
