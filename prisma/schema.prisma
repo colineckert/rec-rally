@@ -25,8 +25,7 @@ model Post {
   awayTeamId String?
   homeScore  Int?    @default(0)
   awayScore  Int?    @default(0)
-
-  // Comment   Comment[]
+  leagueId   String?
 
   @@unique([createdAt, id])
   @@index([userId])
