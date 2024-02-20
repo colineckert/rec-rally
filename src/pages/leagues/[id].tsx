@@ -19,8 +19,8 @@ const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
   const { data: league } = api.league.getById.useQuery({ id });
-  const posts = api.post.infiniteTeamFeed.useInfiniteQuery(
-    { teamId: id },
+  const posts = api.post.infiniteLeagueFeed.useInfiniteQuery(
+    { leagueId: id },
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 

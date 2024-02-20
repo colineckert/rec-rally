@@ -71,6 +71,22 @@ export const postRouter = createTRPCRouter({
         },
       });
     }),
+  infiniteLeagueFeed: publicProcedure
+    .input(
+      z.object({
+        leagueId: z.string(),
+        limit: z.number().optional(),
+        cursor: z.object({ id: z.string(), createdAt: z.date() }).optional(),
+      }),
+    )
+    .query(async ({ input: { limit = 10, leagueId, cursor }, ctx }) => {
+      return await getInfinitePosts({
+        limit,
+        ctx,
+        cursor,
+        whereClause: { leagueId },
+      });
+    }),
   create: protectedProcedure
     .input(z.object({ content: z.string() }))
     .mutation(async ({ input: { content }, ctx }) => {
