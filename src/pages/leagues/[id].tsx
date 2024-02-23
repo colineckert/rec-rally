@@ -14,10 +14,13 @@ import { HiArrowLeft } from "react-icons/hi";
 import { InfinitePostList } from "~/components/InfinitePostList";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import { getPlural } from "~/utils/formatters";
+import ManageLeagueDropdown from "~/components/ManageLeagueDropdown";
+import { useSession } from "next-auth/react";
 
 const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
+  const session = useSession();
   const { data: league } = api.league.getById.useQuery({ id });
   const posts = api.post.infiniteLeagueFeed.useInfiniteQuery(
     { leagueId: id },
@@ -26,7 +29,8 @@ const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
   if (!league) return <ErrorPage statusCode={404} />;
 
-  const { name, description, teams, teamsCount } = league;
+  const { name, description, teams, teamsCount, managerId } = league;
+  const isManager = session.data?.user?.id === managerId;
 
   return (
     <>
@@ -49,6 +53,7 @@ const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
           </div>
         </div>
+        {isManager && <ManageLeagueDropdown league={league} />}
       </header>
       <main>
         <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
