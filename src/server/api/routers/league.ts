@@ -30,6 +30,7 @@ export const leagueRouter = createTRPCRouter({
         select: {
           name: true,
           description: true,
+          managerId: true,
           _count: { select: { teams: true } },
           teams: {
             select: {
@@ -54,6 +55,7 @@ export const leagueRouter = createTRPCRouter({
         id,
         name: league.name,
         description: league.description,
+        managerId: league.managerId,
         teamsCount: league._count.teams,
         teams: league.teams.map((team) => ({
           id: team.id,
