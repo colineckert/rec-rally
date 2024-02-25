@@ -9,9 +9,10 @@ import {
   HiOutlineTrash,
   HiTrash,
 } from "react-icons/hi";
-import EditLeagueModal from "./league-modal/EditLeague";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
+import EditLeagueModal from "./league-modal/Edit";
+import DeleteLeagueModal from "./league-modal/Delete";
 
 type ManageTeamDropdownProps = {
   league: inferProcedureOutput<AppRouter["league"]["getById"]>;
@@ -128,6 +129,12 @@ export default function ManageLeagueDropdown({
         league={league}
         isOpen={isEditModalOpen}
         closeModal={() => setIsEditModalOpen(false)}
+      />
+      <DeleteLeagueModal
+        leagueId={league.id}
+        leagueName={league.name}
+        isOpen={isDeleteModalOpen}
+        closeModal={() => setIsDeleteModalOpen(false)}
       />
     </div>
   );
