@@ -21,7 +21,7 @@ import { getPlural } from "~/utils/formatters";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InviteStatus } from "@prisma/client";
 import { Button } from "~/components/Button";
-import LeaveTeamModal from "~/components/team-modal/LeaveTeam";
+import LeaveTeamModal from "~/components/team-modal/Leave";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,

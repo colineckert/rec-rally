@@ -9,8 +9,8 @@ import {
   HiOutlineTrash,
   HiTrash,
 } from "react-icons/hi";
-import DeleteTeamModal from "./team-modal/DeleteTeam";
-import EditTeamModal from "./team-modal/EditTeam";
+import DeleteTeamModal from "./team-modal/Delete";
+import EditTeamModal from "./team-modal/Edit";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
 import InvitePlayersModal from "./team-modal/InvitePlayers";

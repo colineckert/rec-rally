@@ -11,7 +11,7 @@ import { HiArrowLeft, HiCheck, HiX } from "react-icons/hi";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
-import CreateTeamModal from "~/components/team-modal/CreateTeam";
+import CreateTeamModal from "~/components/team-modal/Create";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import { InviteStatus } from "@prisma/client";
 
