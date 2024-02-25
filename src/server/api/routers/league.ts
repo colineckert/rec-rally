@@ -169,4 +169,15 @@ export const leagueRouter = createTRPCRouter({
 
       return updatedLeague;
     }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const { id } = input;
+
+      const deletedLeague = await ctx.db.league.delete({
+        where: { id },
+      });
+
+      return deletedLeague;
+    }),
 });
