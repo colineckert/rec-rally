@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Dialog, Listbox, Transition } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, type SyntheticEvent, useState } from "react";
 import { api } from "~/utils/api";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
-import { HiChevronUpDown } from "react-icons/hi2";
-import { HiCheck } from "react-icons/hi";
 import type { League } from "@prisma/client";
 
 type EditLeagueModalProps = {
@@ -24,25 +22,24 @@ export default function EditLeagueModal({
 
   if (!league?.id) return null;
 
-  // const editleague = api.league.update.useMutation({
-  //   onSuccess: async (updatedleague: League) => {
-  //     await trpcUtils.league.getById.invalidate({ id: updatedleague.id });
-  //   },
-  // });
+  const trpcUtils = api.useUtils();
+  const editleague = api.league.update.useMutation({
+    onSuccess: async (updatedleague: League) => {
+      await trpcUtils.league.getById.invalidate({ id: updatedleague.id });
+    },
+  });
 
   async function handleUpdateleague(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!league) return;
 
-    const name = (event.target as any).leagueName.value;
+    const name = (event.target as any).name.value;
     const description = (event.target as any).description.value || null;
-    console.log("Update League", { name, description });
-    // await editleague.mutateAsync({
-    //   ...league,
-    //   name,
-    //   description,
-    //   leagueId: league?.id ?? null,
-    // });
+    await editleague.mutateAsync({
+      ...league,
+      name,
+      description,
+    });
     closeModal();
   }
 
@@ -90,7 +87,7 @@ export default function EditLeagueModal({
                       <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                         <div className="sm:col-span-4">
                           <label
-                            htmlFor="leagueName"
+                            htmlFor="name"
                             className="block text-sm font-medium leading-6 text-gray-900"
                           >
                             Name
@@ -100,8 +97,8 @@ export default function EditLeagueModal({
                               <input
                                 required
                                 type="text"
-                                name="leagueName"
-                                id="leagueName"
+                                name="name"
+                                id="name"
                                 className="block flex-1 border-0 bg-transparent py-2 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
