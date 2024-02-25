@@ -148,4 +148,25 @@ export const leagueRouter = createTRPCRouter({
         })),
       }));
     }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string().nullable(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, name, description } = input;
+
+      const updatedLeague = await ctx.db.league.update({
+        where: { id },
+        data: {
+          name,
+          description,
+        },
+      });
+
+      return updatedLeague;
+    }),
 });
