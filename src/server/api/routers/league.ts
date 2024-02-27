@@ -69,7 +69,50 @@ export const leagueRouter = createTRPCRouter({
         })),
       };
     }),
+  getByManagerId: protectedProcedure
+    .input(z.object({ managerId: z.string() }))
+    .query(async ({ input: { managerId }, ctx }) => {
+      const leagues = await ctx.db.league.findMany({
+        where: { managerId },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          _count: { select: { teams: true } },
+          teams: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              manager: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
 
+      return leagues.map((league) => ({
+        id: league.id,
+        name: league.name,
+        description: league.description,
+        teamsCount: league._count.teams,
+        teams: league.teams.map((team) => ({
+          id: team.id,
+          name: team.name,
+          image: team.image,
+          manager: {
+            id: team.manager.id,
+            name: team.manager.name,
+            image: team.manager.image,
+          },
+        })),
+      }));
+    }),
   getByPlayerId: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ input: { userId }, ctx }) => {
@@ -96,6 +139,7 @@ export const leagueRouter = createTRPCRouter({
       });
 
       const userTeamIds = [...playerTeamIds, ...managerTeamIds];
+      console.log("*********", userTeamIds);
 
       const leagues = await ctx.db.league.findMany({
         where: {
@@ -147,6 +191,27 @@ export const leagueRouter = createTRPCRouter({
           },
         })),
       }));
+    }),
+  create: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        description: z.string().nullable(),
+        managerId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { name, description, managerId } = input;
+
+      const newLeague = await ctx.db.league.create({
+        data: {
+          name,
+          description,
+          managerId,
+        },
+      });
+
+      return newLeague;
     }),
   update: protectedProcedure
     .input(
