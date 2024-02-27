@@ -117,7 +117,7 @@ function PlayerTeams({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col px-2 pb-4">
-      <h3 className="pb-2 text-lg font-bold">Joined</h3>
+      <h3 className="pb-2 text-lg font-bold">Joined Teams</h3>
       <ul role="list">
         {playerTeams?.length === 0 && (
           <li className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">

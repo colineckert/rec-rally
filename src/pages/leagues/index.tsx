@@ -57,6 +57,7 @@ const LeaguesPage: NextPage = (): JSX.Element => {
       </header>
       <main>
         <div className="grid-row-2 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-2">
+          <ManagerLeagues userId={user.id} />
           <PlayerLeagues userId={user.id} />
         </div>
         {/* TODO: implement league posts */}
@@ -71,6 +72,46 @@ const LeaguesPage: NextPage = (): JSX.Element => {
   );
 };
 
+function ManagerLeagues({ userId }: { userId: string }) {
+  const {
+    data: managerLeagues,
+    isLoading,
+    isFetching,
+  } = api.league.getByManagerId.useQuery({ managerId: userId });
+
+  if (isLoading || isFetching) {
+    return <LoadingSpinner />;
+  }
+
+  if (!managerLeagues?.length) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col px-2 pb-4">
+      <h3 className="pb-2 text-lg font-bold">My Leagues</h3>
+      <ul role="list">
+        {managerLeagues?.map((league) => (
+          <li key={league.id} className="my-2 first:mt-0 last:mb-0">
+            <LinkItemCard
+              href={`/leagues/${league.id}`}
+              icon={
+                <HiClipboardDocumentList className="h-8 w-8 text-slate-500" />
+              }
+              title={league.name}
+              subtitle={`${league.teams.length} ${getPlural(
+                league.teams.length,
+                "team",
+                "teams",
+              )}`}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function PlayerLeagues({ userId }: { userId: string }) {
   const {
     data: playerLeagues,
@@ -84,7 +125,7 @@ function PlayerLeagues({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col px-2 pb-4">
-      <h3 className="pb-2 text-lg font-bold">My Leagues</h3>
+      <h3 className="pb-2 text-lg font-bold">Joined Leagues</h3>
       <ul role="list">
         {playerLeagues?.length === 0 && (
           <li className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">
