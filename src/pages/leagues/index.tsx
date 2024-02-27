@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -12,9 +13,12 @@ import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { MyTeamsPosts } from "..";
 import { getPlural } from "~/utils/formatters";
 import { LinkItemCard } from "~/components/LinkItemCard";
+import CreateLeagueModal from "~/components/league-modal/Create";
+import { Button } from "~/components/Button";
 
 const LeaguesPage: NextPage = (): JSX.Element => {
   const session = useSession();
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   if (session.status === "loading") {
     return <LoadingSpinner />;
@@ -45,6 +49,11 @@ const LeaguesPage: NextPage = (): JSX.Element => {
             </div>
           </div>
         </div>
+        <div className="py-3 sm:py-0">
+          <Button onClick={() => setCreateModalOpen(true)}>
+            Create League
+          </Button>
+        </div>
       </header>
       <main>
         <div className="grid-row-2 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-2">
@@ -53,11 +62,11 @@ const LeaguesPage: NextPage = (): JSX.Element => {
         {/* TODO: implement league posts */}
         <MyTeamsPosts />
       </main>
-      {/* <CreateTeamModal
+      <CreateLeagueModal
         managerId={user.id}
         isOpen={createModalOpen}
         closeModal={() => setCreateModalOpen(false)}
-      /> */}
+      />
     </>
   );
 };
