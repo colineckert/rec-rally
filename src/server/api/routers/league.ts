@@ -139,7 +139,6 @@ export const leagueRouter = createTRPCRouter({
       });
 
       const userTeamIds = [...playerTeamIds, ...managerTeamIds];
-      console.log("*********", userTeamIds);
 
       const leagues = await ctx.db.league.findMany({
         where: {
