@@ -21,7 +21,7 @@ export default function DeleteLeagueModal({
   const router = useRouter();
   const deleteLeague = api.league.delete.useMutation({
     onSuccess: () => {
-      router.push("/teams").catch((err) => {
+      router.push("/leagues").catch((err) => {
         console.log(err);
       });
     },
