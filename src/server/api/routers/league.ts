@@ -274,4 +274,25 @@ export const leagueRouter = createTRPCRouter({
 
       return teamsToAdd;
     }),
+  addTeams: protectedProcedure
+    .input(
+      z.object({
+        leagueId: z.string(),
+        teamIds: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { leagueId, teamIds } = input;
+
+      const updatedLeague = await ctx.db.league.update({
+        where: { id: leagueId },
+        data: {
+          teams: {
+            connect: teamIds.map((id) => ({ id })),
+          },
+        },
+      });
+
+      return updatedLeague;
+    }),
 });
