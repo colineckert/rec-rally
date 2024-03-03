@@ -13,6 +13,7 @@ import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
 import EditLeagueModal from "./league-modal/Edit";
 import DeleteLeagueModal from "./league-modal/Delete";
+import AddTeamsModal from "./league-modal/AddTeams";
 
 type ManageTeamDropdownProps = {
   league: inferProcedureOutput<AppRouter["league"]["getById"]>;
@@ -25,7 +26,7 @@ export default function ManageLeagueDropdown({
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isAddTeamsModalOpen, setAddTeamsModalOpen] = useState(false);
 
   return (
     <div className="text-right">
@@ -76,7 +77,7 @@ export default function ManageLeagueDropdown({
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    onClick={() => setIsInviteModalOpen(true)}
+                    onClick={() => setAddTeamsModalOpen(true)}
                     className={`${
                       active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -129,6 +130,11 @@ export default function ManageLeagueDropdown({
         league={league}
         isOpen={isEditModalOpen}
         closeModal={() => setIsEditModalOpen(false)}
+      />
+      <AddTeamsModal
+        leagueId={league.id}
+        isOpen={isAddTeamsModalOpen}
+        closeModal={() => setAddTeamsModalOpen(false)}
       />
       <DeleteLeagueModal
         leagueId={league.id}
