@@ -8,6 +8,8 @@ import {
   HiUserAdd,
   HiOutlineTrash,
   HiTrash,
+  HiOutlineUserRemove,
+  HiUserRemove,
 } from "react-icons/hi";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
@@ -26,7 +28,8 @@ export default function ManageLeagueDropdown({
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isAddTeamsModalOpen, setAddTeamsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   return (
     <div className="text-right">
@@ -74,10 +77,12 @@ export default function ManageLeagueDropdown({
                   </button>
                 )}
               </Menu.Item>
+            </div>
+            <div className="px-1 py-1 ">
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    onClick={() => setAddTeamsModalOpen(true)}
+                    onClick={() => setIsAddModalOpen(true)}
                     className={`${
                       active ? "bg-slate-100 text-black" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -94,6 +99,29 @@ export default function ManageLeagueDropdown({
                       />
                     )}
                     Add Teams
+                  </button>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={() => setIsRemoveModalOpen(true)}
+                    className={`${
+                      active ? "bg-slate-100 text-black" : "text-gray-900"
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  >
+                    {active ? (
+                      <HiUserRemove
+                        className="mr-3 h-5 w-5 text-green-400"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <HiOutlineUserRemove
+                        className="mr-3 h-5 w-5 text-green-600"
+                        aria-hidden="true"
+                      />
+                    )}
+                    Remove Teams
                   </button>
                 )}
               </Menu.Item>
@@ -133,8 +161,8 @@ export default function ManageLeagueDropdown({
       />
       <AddTeamsModal
         leagueId={league.id}
-        isOpen={isAddTeamsModalOpen}
-        closeModal={() => setAddTeamsModalOpen(false)}
+        isOpen={isAddModalOpen}
+        closeModal={() => setIsAddModalOpen(false)}
       />
       <DeleteLeagueModal
         leagueId={league.id}
