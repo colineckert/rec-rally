@@ -57,7 +57,7 @@ export default function AddTeamsModal({
     closeModal();
   }
 
-  function handleCreateInvites(event: SyntheticEvent<HTMLFormElement>) {
+  function handleAddTeams(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     addTeams.mutate({ leagueId, teamIds: seletectIds });
     handleCloseModal();
@@ -101,7 +101,7 @@ export default function AddTeamsModal({
                     Add teams to your league.
                   </p>
                 </div>
-                <form id="player-invite-form" onSubmit={handleCreateInvites}>
+                <form id="player-invite-form" onSubmit={handleAddTeams}>
                   <div className="border-b border-gray-900/10 pb-12">
                     <div className="mt-10 grid grid-cols-1 gap-x-4 gap-y-4">
                       <div className="col-span-full">
