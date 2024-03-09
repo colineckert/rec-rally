@@ -101,12 +101,12 @@ export default function AddTeamsModal({
                     Add teams to your league.
                   </p>
                 </div>
-                <form id="player-invite-form" onSubmit={handleAddTeams}>
+                <form id="add-teams-form" onSubmit={handleAddTeams}>
                   <div className="border-b border-gray-900/10 pb-12">
                     <div className="mt-10 grid grid-cols-1 gap-x-4 gap-y-4">
                       <div className="col-span-full">
                         <label
-                          htmlFor="players"
+                          htmlFor="teams"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
                           Select Teams
