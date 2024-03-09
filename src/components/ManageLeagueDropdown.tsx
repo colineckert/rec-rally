@@ -16,6 +16,7 @@ import type { AppRouter } from "~/server/api/root";
 import EditLeagueModal from "./league-modal/Edit";
 import DeleteLeagueModal from "./league-modal/Delete";
 import AddTeamsModal from "./league-modal/AddTeams";
+import RemoveTeamsModal from "./league-modal/RemoveTeams";
 
 type ManageTeamDropdownProps = {
   league: inferProcedureOutput<AppRouter["league"]["getById"]>;
@@ -163,6 +164,12 @@ export default function ManageLeagueDropdown({
         leagueId={league.id}
         isOpen={isAddModalOpen}
         closeModal={() => setIsAddModalOpen(false)}
+      />
+      <RemoveTeamsModal
+        leagueId={league.id}
+        teams={league.teams}
+        isOpen={isRemoveModalOpen}
+        closeModal={() => setIsRemoveModalOpen(false)}
       />
       <DeleteLeagueModal
         leagueId={league.id}

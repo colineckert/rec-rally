@@ -4,11 +4,14 @@ import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { HiCheck } from "react-icons/hi";
 import { HiChevronUpDown } from "react-icons/hi2";
 import { api } from "~/utils/api";
-import type { Team, User } from "@prisma/client";
+import type { Team } from "@prisma/client";
 
 type RemoveTeamsModalProps = {
   leagueId: string;
-  teams: Team[];
+  teams: {
+    id: string;
+    name: string;
+  }[];
   isOpen: boolean;
   closeModal: () => void;
 };
@@ -117,8 +120,8 @@ export default function RemoveTeamsModal({
                                 <Combobox.Input
                                   className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
                                   placeholder="Search teams..."
-                                  displayValue={(player: User) =>
-                                    player?.name ?? ""
+                                  displayValue={(team: Team) =>
+                                    team?.name ?? ""
                                   }
                                   onChange={(event) =>
                                     setQuery(event.target.value)
