@@ -77,15 +77,14 @@ function FollowingPosts() {
 }
 
 export function MyTeamsPosts() {
-  // TODO: implement
-  const posts = api.post.infiniteFeed.useInfiniteQuery(
-    { onlyFollowing: true },
+  const posts = api.post.infiniteMyTeamsFeed.useInfiniteQuery(
+    {},
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
   return (
     <InfinitePostList
-      posts={[]}
+      posts={posts.data?.pages.flatMap((page) => page.posts)}
       isError={posts.isError}
       isLoading={posts.isLoading}
       hasMore={posts.hasNextPage}

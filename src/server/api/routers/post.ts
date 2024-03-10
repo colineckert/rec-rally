@@ -52,6 +52,39 @@ export const postRouter = createTRPCRouter({
         });
       },
     ),
+  infiniteMyTeamsFeed: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().optional(),
+        cursor: z.object({ id: z.string(), createdAt: z.date() }).optional(),
+      }),
+    )
+    .query(async ({ input: { limit = 10, cursor }, ctx }) => {
+      const currentUserId = ctx.session?.user?.id;
+      if (currentUserId == null) {
+        throw new Error("Not logged in");
+      }
+
+      const teams = await ctx.db.team.findMany({
+        where: {
+          OR: [
+            { managerId: currentUserId },
+            { players: { some: { id: currentUserId } } },
+          ],
+        },
+      });
+
+      const whereClause = {
+        OR: teams.map((team) => ({ homeTeamId: team.id, awayTeamId: team.id })),
+      };
+
+      return await getInfinitePosts({
+        limit,
+        ctx,
+        cursor,
+        whereClause,
+      });
+    }),
   infiniteTeamFeed: publicProcedure
     .input(
       z.object({
