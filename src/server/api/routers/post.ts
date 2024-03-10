@@ -61,14 +61,25 @@ export const postRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input: { limit = 10, teamId, cursor }, ctx }) => {
+      const team = await ctx.db.team.findUnique({ where: { id: teamId } });
+      const players = await ctx.db.user.findMany({
+        where: { playerTeams: { some: { id: teamId } } },
+      });
+
+      const whereClause = {
+        OR: [
+          { homeTeamId: teamId },
+          { awayTeamId: teamId },
+          { userId: { in: players.map((player) => player.id) } },
+          { userId: team?.managerId },
+        ],
+      };
+
       return await getInfinitePosts({
         limit,
         ctx,
         cursor,
-        whereClause: {
-          homeTeamId: teamId,
-          OR: [{ awayTeamId: teamId }],
-        },
+        whereClause,
       });
     }),
   infiniteLeagueFeed: publicProcedure
