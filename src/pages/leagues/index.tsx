@@ -10,11 +10,11 @@ import { HiArrowLeft } from "react-icons/hi";
 import { HiClipboardDocumentList } from "react-icons/hi2";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
-import { MyTeamsPosts } from "..";
 import { getPlural } from "~/utils/formatters";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import CreateLeagueModal from "~/components/league-modal/Create";
 import { Button } from "~/components/Button";
+import { InfinitePostList } from "~/components/InfinitePostList";
 
 const LeaguesPage: NextPage = (): JSX.Element => {
   const session = useSession();
@@ -60,8 +60,7 @@ const LeaguesPage: NextPage = (): JSX.Element => {
           <ManagerLeagues userId={user.id} />
           <PlayerLeagues userId={user.id} />
         </div>
-        {/* TODO: implement league posts */}
-        <MyTeamsPosts />
+        <MyLeaguesPosts />
       </main>
       <CreateLeagueModal
         managerId={user.id}
@@ -71,6 +70,23 @@ const LeaguesPage: NextPage = (): JSX.Element => {
     </>
   );
 };
+
+function MyLeaguesPosts() {
+  const posts = api.post.infiniteMyLeaguesFeed.useInfiniteQuery(
+    {},
+    { getNextPageParam: (lastPage) => lastPage.nextCursor },
+  );
+
+  return (
+    <InfinitePostList
+      posts={posts.data?.pages.flatMap((page) => page.posts)}
+      isError={posts.isError}
+      isLoading={posts.isLoading}
+      hasMore={posts.hasNextPage}
+      fetchNewPosts={posts.fetchNextPage}
+    />
+  );
+}
 
 function ManagerLeagues({ userId }: { userId: string }) {
   const {
