@@ -1,3 +1,4 @@
+import { PostType } from "@prisma/client";
 import { db } from "../src/server/db";
 
 // 'clpfuqvex0000im3vau7gdkja' is the id of the user 'Admin
@@ -107,8 +108,6 @@ async function main() {
     },
   });
 
-  console.log("Teams:", { team1, team2 });
-
   const leagueOneId = "cl9ebqhxk00003b600tymyl01";
   const league1 = await db.league.upsert({
     where: {
@@ -143,7 +142,60 @@ async function main() {
     },
   });
 
+  const postOneId = "cl9ebqhxk00003b600tymyp01";
+  const postOne = await db.post.upsert({
+    where: {
+      id: postOneId,
+    },
+    create: {
+      id: postOneId,
+      content: "This is a test post",
+      userId: "cl9ebqhxk00003b600tymydho",
+      createdAt: new Date(),
+      type: PostType.SOCIAL,
+    },
+    update: {},
+  });
+
+  const postTwoId = "cl9ebqhxk00003b600tymyp02";
+  const postTwo = await db.post.upsert({
+    where: {
+      id: postTwoId,
+    },
+    create: {
+      id: postTwoId,
+      content: "This is another test post",
+      userId: "cl9ebqhxk00003b600tymyd01",
+      createdAt: new Date(),
+      type: PostType.SOCIAL,
+    },
+    update: {},
+  });
+
+  const postThreeId = "cl9ebqhxk00003b600tymyp03";
+  const postThree = await db.post.upsert({
+    where: {
+      id: postThreeId,
+    },
+    create: {
+      id: postThreeId,
+      content: "This is a test post for league 1",
+      userId: "clpfuqvex0000im3vau7gdkja",
+      createdAt: new Date(),
+      type: PostType.GAME_RECAP,
+      leagueId: leagueOneId,
+      homeTeamId: teamOneId,
+      awayTeamId: teamTwoId,
+      homeScore: 2,
+      awayScore: 1,
+    },
+    update: {},
+  });
+
+  console.log("Players:", { player1, player2 });
+  console.log("Teams:", { team1, team2 });
   console.log("Leagues:", { league1, league2 });
+  console.log("Posts:", { postOne, postTwo, postThree });
 }
 
 main()

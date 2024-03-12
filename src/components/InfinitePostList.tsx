@@ -42,26 +42,6 @@ export function InfinitePostList({
         hasMore={hasMore}
         loader={<LoadingSpinner />}
       >
-        {/* TODO: remove this test post */}
-        <GameRecap
-          key="test-recap"
-          type="GAME_RECAP"
-          user={{
-            id: "test",
-            image: null,
-            name: "Test User",
-          }}
-          id="test-recap"
-          content=""
-          homeTeamId="clsagg4wp0001xl4brprvdhx8"
-          awayTeamId="cl9ebqhxk00003b600tymyt01"
-          homeScore={2}
-          awayScore={1}
-          createdAt={new Date()}
-          likeCount={1}
-          likedByMe={false}
-          leagueId="cl9ebqhxk00003b600tymyl01"
-        />
         {posts.map((post) => {
           if (post.type === "GAME_RECAP") {
             return <GameRecap key={post.id} {...post} />;
