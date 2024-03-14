@@ -170,14 +170,13 @@ model League {
 
 model Game {
   id         String   @id @default(cuid())
+  leagueId   String
   homeTeamId String
   awayTeamId String
-  homeScore  Int?     @default(0)
-  awayScore  Int?     @default(0)
+  homeScore  Int      @default(0)
+  awayScore  Int      @default(0)
   date       DateTime @default(now())
   location   String?
-  createdAt  DateTime @default(now())
-  leagueId   String?
 
   @@unique([homeTeamId, awayTeamId, date])
   @@index([homeTeamId])
