@@ -180,7 +180,7 @@ async function main() {
     create: {
       id: postThreeId,
       content: "This is a test post for league 1",
-      userId: "clpfuqvex0000im3vau7gdkja",
+      userId: playerOneId,
       createdAt: new Date(),
       type: PostType.GAME_RECAP,
       leagueId: leagueOneId,
