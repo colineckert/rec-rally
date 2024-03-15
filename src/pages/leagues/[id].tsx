@@ -14,8 +14,9 @@ import { HiArrowLeft } from "react-icons/hi";
 import { InfinitePostList } from "~/components/InfinitePostList";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import { getPlural } from "~/utils/formatters";
-import ManageLeagueDropdown from "~/components/ManageLeagueDropdown";
 import { useSession } from "next-auth/react";
+import ManageLeagueDropdown from "~/components/ManageLeagueDropdown";
+import LogGame from "~/components/league-modal/LogGame";
 
 const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -53,7 +54,12 @@ const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
           </div>
         </div>
-        {isManager && <ManageLeagueDropdown league={league} />}
+        {isManager && (
+          <div className="flex gap-2 py-3 sm:py-0">
+            <LogGame leagueId={id} />
+            <ManageLeagueDropdown league={league} />
+          </div>
+        )}
       </header>
       <main>
         <div className="grid-row-3 mb-2 grid auto-rows-fr gap-6 border-b p-6 sm:grid-cols-3">
