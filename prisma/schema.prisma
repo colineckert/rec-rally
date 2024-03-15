@@ -177,6 +177,7 @@ model Game {
   date       DateTime @default(now())
   location   String?
   leagueId   String?
+  friendly   Boolean  @default(false)
 
   @@unique([homeTeamId, awayTeamId, date])
   @@index([homeTeamId])
