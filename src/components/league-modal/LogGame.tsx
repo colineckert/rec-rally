@@ -1,9 +1,17 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, type SyntheticEvent, useState } from "react";
 import { Button } from "../Button";
+import type { inferProcedureOutput } from "@trpc/server";
+import type { AppRouter } from "~/server/api/root";
 
-export default function LogGame({ leagueId }: { leagueId: string }) {
+type LogGameProps = {
+  league: inferProcedureOutput<AppRouter["league"]["getById"]>;
+};
+
+export default function LogGame({ league }: LogGameProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  if (!league) return null;
 
   return (
     <>
@@ -11,7 +19,8 @@ export default function LogGame({ leagueId }: { leagueId: string }) {
         Log Game
       </Button>
       <LogGameModal
-        leagueId={leagueId}
+        leagueId={league.id}
+        teams={league.teams}
         isOpen={isOpen}
         closeModal={() => setIsOpen(false)}
       />
@@ -19,15 +28,34 @@ export default function LogGame({ leagueId }: { leagueId: string }) {
   );
 }
 
-function LogGameModal({
-  leagueId,
-  isOpen,
-  closeModal,
-}: {
+type LogGameModalProps = {
   leagueId: string;
+  teams: {
+    id: string;
+    name: string;
+  }[];
   isOpen: boolean;
   closeModal: () => void;
-}) {
+};
+
+function LogGameModal({
+  leagueId,
+  teams,
+  isOpen,
+  closeModal,
+}: LogGameModalProps) {
+  const [homeTeam, setHomeTeam] = useState("");
+  const [awayTeam, setAwayTeam] = useState("");
+  const [homeScore, setHomeScore] = useState(0);
+  const [awayScore, setAwayScore] = useState(0);
+
+  console.log("teams", teams);
+
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    console.log({ homeTeam, awayTeam, homeScore, awayScore });
+  };
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -67,7 +95,7 @@ function LogGameModal({
                     team and the score.
                   </p>
                 </div>
-                <form id="log-game-form" onSubmit={() => null}>
+                <form id="log-game-form" onSubmit={handleSubmit}>
                   <div className="space-y-12">
                     <div className="border-b border-gray-900/10 pb-12">
                       <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6"></div>

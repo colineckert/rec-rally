@@ -56,7 +56,7 @@ const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         </div>
         {isManager && (
           <div className="flex gap-2 py-3 sm:py-0">
-            <LogGame leagueId={id} />
+            <LogGame league={league} />
             <ManageLeagueDropdown league={league} />
           </div>
         )}
