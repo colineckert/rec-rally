@@ -244,6 +244,42 @@ export const leagueRouter = createTRPCRouter({
 
       return deletedLeague;
     }),
+  getTeams: protectedProcedure
+    .input(z.object({ leagueId: z.string() }))
+    .query(async ({ input: { leagueId }, ctx }) => {
+      const league = await ctx.db.league.findUnique({
+        where: { id: leagueId },
+        select: {
+          teams: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              manager: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (league == null) return [];
+
+      return league.teams.map((team) => ({
+        id: team.id,
+        name: team.name,
+        image: team.image,
+        manager: {
+          id: team.manager.id,
+          name: team.manager.name,
+          image: team.manager.image,
+        },
+      }));
+    }),
   getTeamsAvailabletoAdd: protectedProcedure
     .input(z.object({ leagueId: z.string() }))
     .query(async ({ input: { leagueId }, ctx }) => {
