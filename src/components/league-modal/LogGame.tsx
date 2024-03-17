@@ -4,7 +4,7 @@ import type { AppRouter } from "~/server/api/root";
 import { api } from "~/utils/api";
 import { HiCheck } from "react-icons/hi";
 import { HiChevronUpDown } from "react-icons/hi2";
-import { Dialog, Listbox, Transition } from "@headlessui/react";
+import { Dialog, Listbox, Switch, Transition } from "@headlessui/react";
 import { Button } from "../Button";
 
 type LogGameProps = {
@@ -57,6 +57,7 @@ function LogGameModal({
   } | null>(null);
   const [homeScore, setHomeScore] = useState(0);
   const [awayScore, setAwayScore] = useState(0);
+  const [friendly, setFriendly] = useState(false);
 
   const trpcUtils = api.useUtils();
   const createGame = api.game.create.useMutation({
@@ -89,6 +90,7 @@ function LogGameModal({
     setAwayTeam(null);
     setHomeScore(0);
     setAwayScore(0);
+    setFriendly(false);
   };
 
   return (
@@ -298,6 +300,28 @@ function LogGameModal({
                           Home and away teams cannot be the same.
                         </p>
                       )}
+                      <div className="flex items-center gap-2 pt-6">
+                        <Switch
+                          checked={friendly}
+                          onChange={setFriendly}
+                          className={`${
+                            friendly ? "bg-green-500" : "bg-gray-500"
+                          }
+                            relative inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
+                        >
+                          <span className="sr-only">Use setting</span>
+                          <span
+                            aria-hidden="true"
+                            className={`${
+                              friendly ? "translate-x-5" : "translate-x-0"
+                            }
+                              pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+                          />
+                        </Switch>
+                        <span className="text-sm leading-6 text-gray-900">
+                          Friendly
+                        </span>
+                      </div>
                     </div>
                     <div className="mt-6 flex items-center justify-end gap-x-6">
                       <button
