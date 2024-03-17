@@ -56,7 +56,9 @@ export const gameRouter = createTRPCRouter({
       z.object({
         date: z.date(),
         homeTeamId: z.string(),
+        homeScore: z.number().optional(),
         awayTeamId: z.string(),
+        awayScore: z.number().optional(),
         leagueId: z.string().optional(),
         friendly: z.boolean(),
       }),
@@ -66,7 +68,9 @@ export const gameRouter = createTRPCRouter({
         data: {
           date: input.date,
           homeTeamId: input.homeTeamId,
+          homeScore: input.homeScore,
           awayTeamId: input.awayTeamId,
+          awayScore: input.awayScore,
           leagueId: input.leagueId,
           friendly: input.friendly,
         },
