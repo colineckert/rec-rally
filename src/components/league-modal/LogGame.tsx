@@ -41,23 +41,36 @@ type LogGameModalProps = {
   closeModal: () => void;
 };
 
+type LogGameFormValues = {
+  homeTeam: {
+    id: string;
+    name: string;
+  } | null;
+  awayTeam: {
+    id: string;
+    name: string;
+  } | null;
+  homeScore: number;
+  awayScore: number;
+  friendly: boolean;
+};
+
+const defaultFormValues: LogGameFormValues = {
+  homeTeam: null,
+  awayTeam: null,
+  homeScore: 0,
+  awayScore: 0,
+  friendly: false,
+};
+
 function LogGameModal({
   leagueId,
   teams,
   isOpen,
   closeModal,
 }: LogGameModalProps) {
-  const [homeTeam, setHomeTeam] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-  const [awayTeam, setAwayTeam] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-  const [homeScore, setHomeScore] = useState(0);
-  const [awayScore, setAwayScore] = useState(0);
-  const [friendly, setFriendly] = useState(false);
+  // TODO: can we just store team ids instead of the whole object?
+  const [formValues, setFormValues] = useState(defaultFormValues);
 
   const trpcUtils = api.useUtils();
   const createGame = api.game.create.useMutation({
@@ -69,9 +82,11 @@ function LogGameModal({
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
+    const { homeTeam, awayTeam, homeScore, awayScore, friendly } = formValues;
+
     if (!homeTeam || !awayTeam) return;
 
-    console.log({ homeTeam, awayTeam, homeScore, awayScore });
+    console.log(formValues);
 
     // await createGame.mutateAsync({
     //   date: new Date(),
@@ -86,11 +101,7 @@ function LogGameModal({
 
   const handleClose = () => {
     closeModal();
-    setHomeTeam(null);
-    setAwayTeam(null);
-    setHomeScore(0);
-    setAwayScore(0);
-    setFriendly(false);
+    setFormValues(defaultFormValues);
   };
 
   return (
@@ -136,7 +147,15 @@ function LogGameModal({
                   <div className="space-y-12">
                     <div className="border-b border-gray-900/10 pb-10">
                       <div className="mt-6">
-                        <Listbox value={homeTeam} onChange={setHomeTeam}>
+                        <Listbox
+                          value={formValues.homeTeam}
+                          onChange={(team) =>
+                            setFormValues((prev) => ({
+                              ...prev,
+                              homeTeam: team,
+                            }))
+                          }
+                        >
                           <Dialog.Title
                             as="h5"
                             className="text-sm font-medium leading-6 text-gray-900"
@@ -146,7 +165,7 @@ function LogGameModal({
                           <div className="relative mt-1 flex gap-4">
                             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                               <span className="block truncate">
-                                {homeTeam?.name}
+                                {formValues.homeTeam?.name}
                               </span>
                               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                 <HiChevronUpDown
@@ -206,9 +225,12 @@ function LogGameModal({
                                 name="homeScore"
                                 id="homeScore"
                                 className="block flex-1 border-0 bg-transparent py-2 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                                value={homeScore}
+                                value={formValues.homeScore}
                                 onChange={(e) =>
-                                  setHomeScore(parseInt(e.target.value, 10))
+                                  setFormValues((prev) => ({
+                                    ...prev,
+                                    homeScore: parseInt(e.target.value, 10),
+                                  }))
                                 }
                               />
                             </div>
@@ -216,7 +238,15 @@ function LogGameModal({
                         </Listbox>
                       </div>
                       <div className="mt-6">
-                        <Listbox value={awayTeam} onChange={setAwayTeam}>
+                        <Listbox
+                          value={formValues.awayTeam}
+                          onChange={(team) =>
+                            setFormValues((prev) => ({
+                              ...prev,
+                              awayTeam: team,
+                            }))
+                          }
+                        >
                           <Dialog.Title
                             as="h5"
                             className="text-sm font-medium leading-6 text-gray-900"
@@ -226,7 +256,7 @@ function LogGameModal({
                           <div className="relative mt-1 flex gap-4">
                             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                               <span className="block truncate">
-                                {awayTeam?.name}
+                                {formValues.awayTeam?.name}
                               </span>
                               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                 <HiChevronUpDown
@@ -286,26 +316,36 @@ function LogGameModal({
                                 name="awayScore"
                                 id="awayScore"
                                 className="block flex-1 border-0 bg-transparent py-2 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                                value={awayScore}
+                                value={formValues.awayScore}
                                 onChange={(e) =>
-                                  setAwayScore(parseInt(e.target.value, 10))
+                                  setFormValues((prev) => ({
+                                    ...prev,
+                                    awayScore: parseInt(e.target.value, 10),
+                                  }))
                                 }
                               />
                             </div>
                           </div>
                         </Listbox>
                       </div>
-                      {homeTeam && awayTeam && homeTeam.id === awayTeam.id && (
-                        <p className="mt-4 text-sm text-red-500">
-                          Home and away teams cannot be the same.
-                        </p>
-                      )}
+                      {formValues.homeTeam &&
+                        formValues.awayTeam &&
+                        formValues.homeTeam?.id === formValues.awayTeam?.id && (
+                          <p className="mt-4 text-sm text-red-500">
+                            Home and away teams cannot be the same.
+                          </p>
+                        )}
                       <div className="flex items-center gap-2 pt-6">
                         <Switch
-                          checked={friendly}
-                          onChange={setFriendly}
+                          checked={formValues.friendly}
+                          onChange={(value) => {
+                            setFormValues((prev) => ({
+                              ...prev,
+                              friendly: value,
+                            }));
+                          }}
                           className={`${
-                            friendly ? "bg-green-500" : "bg-gray-500"
+                            formValues.friendly ? "bg-green-500" : "bg-gray-500"
                           }
                             relative inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
                         >
@@ -313,7 +353,9 @@ function LogGameModal({
                           <span
                             aria-hidden="true"
                             className={`${
-                              friendly ? "translate-x-5" : "translate-x-0"
+                              formValues.friendly
+                                ? "translate-x-5"
+                                : "translate-x-0"
                             }
                               pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
                           />
@@ -335,9 +377,9 @@ function LogGameModal({
                         type="submit"
                         disabled={
                           createGame.isLoading ||
-                          !homeTeam ||
-                          !awayTeam ||
-                          homeTeam.id === awayTeam.id
+                          !formValues.homeTeam ||
+                          !formValues.awayTeam ||
+                          formValues.homeTeam.id === formValues.awayTeam.id
                         }
                         className="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                       >
