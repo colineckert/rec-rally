@@ -177,6 +177,36 @@ export const postRouter = createTRPCRouter({
 
       return post;
     }),
+  createGameRecap: protectedProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        homeTeamId: z.string(),
+        awayTeamId: z.string(),
+        homeScore: z.number(),
+        awayScore: z.number(),
+        leagueId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const currentUserId = ctx.session?.user?.id;
+      const post = await ctx.db.post.create({
+        data: {
+          content: input.content,
+          userId: currentUserId,
+          type: "GAME_RECAP",
+          homeTeamId: input.homeTeamId,
+          awayTeamId: input.awayTeamId,
+          homeScore: input.homeScore,
+          awayScore: input.awayScore,
+          leagueId: input.leagueId,
+        },
+      });
+
+      void ctx.revalidateSSG?.(`/profiles/${ctx.session.user.id}`);
+
+      return post;
+    }),
   toggleLike: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id }, ctx }) => {
