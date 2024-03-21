@@ -32,13 +32,13 @@ export function GameRecap({
           {league.data?.name}
         </span>
         <div>
-          <div className="flex items-end justify-around self-center">
+          <div className="grid grid-cols-3 items-center justify-items-stretch">
             <TeamCard
               id={homeTeamId}
               name={team1.data?.name}
               logo={team1.data?.image}
             />
-            <div className="flex grow-0 flex-row items-center gap-4 self-center sm:gap-16">
+            <div className="grid grid-cols-3 items-center justify-items-center">
               <span className="text-2xl font-bold">{homeScore}</span>
               <span className="text-sm text-gray-500">-</span>
               <span className="text-2xl font-bold">{awayScore}</span>
