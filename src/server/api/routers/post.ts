@@ -75,7 +75,9 @@ export const postRouter = createTRPCRouter({
       });
 
       const whereClause = {
-        OR: teams.map((team) => ({ homeTeamId: team.id, awayTeamId: team.id })),
+        OR: teams.map((team) => ({
+          OR: [{ homeTeamId: team.id }, { awayTeamId: team.id }],
+        })),
       };
 
       return await getInfinitePosts({
@@ -134,7 +136,7 @@ export const postRouter = createTRPCRouter({
             { managerId: currentUserId },
             { teams: { some: { players: { some: { id: currentUserId } } } } },
           ],
-        }
+        },
       });
 
       const whereClause = {
