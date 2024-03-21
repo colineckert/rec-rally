@@ -73,11 +73,17 @@ function LogGameModal({
   const [formValues, setFormValues] = useState(defaultFormValues);
 
   const trpcUtils = api.useUtils();
-  const createGame = api.game.create.useMutation({
+  const createGame = api.game.create.useMutation();
+  const createGameRecap = api.post.createGameRecap.useMutation({
     onSuccess: async () => {
       await trpcUtils.post.infiniteLeagueFeed.invalidate({ leagueId });
     },
   });
+
+  const handleClose = () => {
+    closeModal();
+    setFormValues(defaultFormValues);
+  };
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -88,20 +94,26 @@ function LogGameModal({
 
     console.log(formValues);
 
-    // await createGame.mutateAsync({
-    //   date: new Date(),
-    //   homeTeamId: homeTeam.id,
-    //   awayTeamId: awayTeam.id,
-    //   homeScore,
-    //   awayScore,
-    //   leagueId,
-    //   friendly: false,
-    // });
-  };
+    await createGame.mutateAsync({
+      date: new Date(),
+      homeTeamId: homeTeam.id,
+      awayTeamId: awayTeam.id,
+      homeScore,
+      awayScore,
+      leagueId,
+      friendly,
+    });
 
-  const handleClose = () => {
-    closeModal();
-    setFormValues(defaultFormValues);
+    await createGameRecap.mutateAsync({
+      content: `Game between ${homeTeam.name} and ${awayTeam.name}`,
+      homeTeamId: homeTeam.id,
+      awayTeamId: awayTeam.id,
+      homeScore,
+      awayScore,
+      leagueId,
+    });
+
+    handleClose();
   };
 
   return (
