@@ -69,7 +69,6 @@ function LogGameModal({
   isOpen,
   closeModal,
 }: LogGameModalProps) {
-  // TODO: can we just store team ids instead of the whole object?
   const [formValues, setFormValues] = useState(defaultFormValues);
 
   const trpcUtils = api.useUtils();
@@ -91,8 +90,6 @@ function LogGameModal({
     const { homeTeam, awayTeam, homeScore, awayScore, friendly } = formValues;
 
     if (!homeTeam || !awayTeam) return;
-
-    console.log(formValues);
 
     await createGame.mutateAsync({
       date: new Date(),
