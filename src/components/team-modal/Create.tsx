@@ -12,7 +12,7 @@ type CreateTeamModalProps = {
   closeModal: () => void;
 };
 
-export default function CreateTeamModal({
+export function CreateTeamModal({
   managerId,
   isOpen,
   closeModal,

@@ -16,7 +16,7 @@ type RemoveTeamsModalProps = {
   closeModal: () => void;
 };
 
-export default function RemoveTeamsModal({
+export function RemoveTeamsModal({
   leagueId,
   teams,
   isOpen,

@@ -9,7 +9,7 @@ type CreateLeagueModalProps = {
   closeModal: () => void;
 };
 
-export default function CreateLeagueModal({
+export function CreateLeagueModal({
   managerId,
   isOpen,
   closeModal,

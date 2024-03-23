@@ -14,7 +14,7 @@ type EditTeamModalProps = {
   closeModal: () => void;
 };
 
-export default function EditTeamModal({
+export function EditTeamModal({
   team,
   isOpen,
   closeModal,

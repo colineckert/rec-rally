@@ -12,7 +12,7 @@ import { api } from "~/utils/api";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { getPlural } from "~/utils/formatters";
 import { LinkItemCard } from "~/components/LinkItemCard";
-import CreateLeagueModal from "~/components/league-modal/Create";
+import { CreateLeagueModal } from "~/components/league-modal/Create";
 import { Button } from "~/components/Button";
 import { InfinitePostList } from "~/components/InfinitePostList";
 

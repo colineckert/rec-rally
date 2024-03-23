@@ -15,13 +15,13 @@ import { HiArrowLeft, HiOutlineMinusCircle } from "react-icons/hi";
 import { ProfileImage } from "~/components/ProfileImage";
 import { InfinitePostList } from "~/components/InfinitePostList";
 import { useSession } from "next-auth/react";
-import ManageTeamDropdown from "~/components/ManageTeamDropdown";
+import { ManageTeamDropdown } from "~/components/ManageTeamDropdown";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import { getPlural } from "~/utils/formatters";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InviteStatus } from "@prisma/client";
 import { Button } from "~/components/Button";
-import LeaveTeamModal from "~/components/team-modal/Leave";
+import { LeaveTeamModal } from "~/components/team-modal/Leave";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
 

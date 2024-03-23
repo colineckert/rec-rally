@@ -13,18 +13,16 @@ import {
 } from "react-icons/hi";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
-import EditLeagueModal from "./league-modal/Edit";
-import DeleteLeagueModal from "./league-modal/Delete";
-import AddTeamsModal from "./league-modal/AddTeams";
-import RemoveTeamsModal from "./league-modal/RemoveTeams";
+import { EditLeagueModal } from "./league-modal/Edit";
+import { DeleteLeagueModal } from "./league-modal/Delete";
+import { AddTeamsModal } from "./league-modal/AddTeams";
+import { RemoveTeamsModal } from "./league-modal/RemoveTeams";
 
 type ManageTeamDropdownProps = {
   league: inferProcedureOutput<AppRouter["league"]["getById"]>;
 };
 
-export default function ManageLeagueDropdown({
-  league,
-}: ManageTeamDropdownProps) {
+export function ManageLeagueDropdown({ league }: ManageTeamDropdownProps) {
   if (!league) return null;
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);

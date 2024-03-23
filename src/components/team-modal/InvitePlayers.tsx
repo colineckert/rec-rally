@@ -12,7 +12,7 @@ type InvitePlayersModalProps = {
   closeModal: () => void;
 };
 
-export default function InvitePlayersModal({
+export function InvitePlayersModal({
   teamId,
   isOpen,
   closeModal,

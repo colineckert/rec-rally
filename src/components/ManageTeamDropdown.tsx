@@ -9,17 +9,17 @@ import {
   HiOutlineTrash,
   HiTrash,
 } from "react-icons/hi";
-import DeleteTeamModal from "./team-modal/Delete";
-import EditTeamModal from "./team-modal/Edit";
+import { DeleteTeamModal } from "./team-modal/Delete";
+import { EditTeamModal } from "./team-modal/Edit";
+import { InvitePlayersModal } from "./team-modal/InvitePlayers";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
-import InvitePlayersModal from "./team-modal/InvitePlayers";
 
 type ManageTeamDropdownProps = {
   team: inferProcedureOutput<AppRouter["team"]["getById"]>;
 };
 
-export default function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
+export function ManageTeamDropdown({ team }: ManageTeamDropdownProps) {
   if (!team) return null;
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);

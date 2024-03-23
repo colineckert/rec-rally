@@ -12,7 +12,7 @@ type AddTeamsModalProps = {
   closeModal: () => void;
 };
 
-export default function AddTeamsModal({
+export function AddTeamsModal({
   leagueId,
   isOpen,
   closeModal,

@@ -11,7 +11,7 @@ type LogGameProps = {
   league: inferProcedureOutput<AppRouter["league"]["getById"]>;
 };
 
-export default function LogGame({ league }: LogGameProps) {
+export function LogGame({ league }: LogGameProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   if (!league) return null;

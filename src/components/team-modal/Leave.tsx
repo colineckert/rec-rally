@@ -11,7 +11,7 @@ type LeaveTeamModalProps = {
   closeModal: () => void;
 };
 
-export default function LeaveTeamModal({
+export function LeaveTeamModal({
   teamId,
   teamName,
   isOpen,

@@ -12,7 +12,7 @@ type EditLeagueModalProps = {
   closeModal: () => void;
 };
 
-export default function EditLeagueModal({
+export function EditLeagueModal({
   league,
   isOpen,
   closeModal,

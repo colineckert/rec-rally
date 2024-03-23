@@ -15,8 +15,8 @@ import { InfinitePostList } from "~/components/InfinitePostList";
 import { LinkItemCard } from "~/components/LinkItemCard";
 import { getPlural } from "~/utils/formatters";
 import { useSession } from "next-auth/react";
-import ManageLeagueDropdown from "~/components/ManageLeagueDropdown";
-import LogGame from "~/components/league-modal/LogGame";
+import { ManageLeagueDropdown } from "~/components/ManageLeagueDropdown";
+import { LogGame } from "~/components/league-modal/LogGame";
 
 const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
