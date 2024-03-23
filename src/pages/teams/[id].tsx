@@ -22,6 +22,8 @@ import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { InviteStatus } from "@prisma/client";
 import { Button } from "~/components/Button";
 import LeaveTeamModal from "~/components/team-modal/Leave";
+import type { inferProcedureOutput } from "@trpc/server";
+import type { AppRouter } from "~/server/api/root";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -102,8 +104,11 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               )}
             </div>
           </div>
-          <TeamPlayers players={team.players} />
-          {isManager && <TeamInvites teamId={team.id} />}
+          <div>
+            <TeamPlayers players={team.players} />
+            {isManager && <TeamInvites teamId={team.id} />}
+          </div>
+          <TeamGames teamId={team.id} />
         </div>
         <InfinitePostList
           posts={posts.data?.pages?.flatMap((page) => page.posts) ?? []}
@@ -130,7 +135,7 @@ function TeamPlayers({
 }) {
   if (players.length === 0) {
     return (
-      <div className="px-2">
+      <div className="px-2 pb-4">
         <h3 className="pb-2 text-lg font-bold">Players</h3>
         <div className="rounded border border-red-100 bg-red-50 py-6 text-center text-red-500">
           No players on this team yet.
@@ -139,7 +144,7 @@ function TeamPlayers({
     );
   }
   return (
-    <div className="px-2">
+    <div className="px-2 pb-4">
       <h3 className="pb-2 text-lg font-bold">Players</h3>
       <ul>
         {players.map((player) => (
@@ -207,6 +212,116 @@ function TeamInvites({ teamId }: { teamId: string }) {
         ))}
       </ul>
     </div>
+  );
+}
+
+function TeamGames({ teamId }: { teamId: string }) {
+  const { data: games, isLoading } = api.game.getByTeamId.useQuery({ teamId });
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (games?.length === 0) {
+    return (
+      <div className="px-2">
+        <h3 className="pb-2 text-lg font-bold">Games</h3>
+        <div className="rounded border border-gray-100 bg-gray-50 py-6 text-center text-gray-500">
+          No recent games.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-2">
+      <h3 className="pb-2 text-lg font-bold">Recent Games</h3>
+      <ul>
+        {games?.map((game) => <GameListItem game={game} teamId={teamId} />)}
+      </ul>
+    </div>
+  );
+}
+
+type GameListItemProps = {
+  game: inferProcedureOutput<AppRouter["game"]["getById"]>;
+  teamId: string;
+};
+
+function GameListItem({ game, teamId }: GameListItemProps) {
+  if (!game) return null;
+
+  const isHome = game.homeTeamId === teamId;
+  const teamScore = isHome ? game.homeScore : game.awayScore;
+  const opponentScore = isHome ? game.awayScore : game.homeScore;
+  const opponentId = isHome ? game.awayTeamId : game.homeTeamId;
+
+  const { data: opponent, isLoading } = api.team.getById.useQuery({
+    id: opponentId,
+  });
+
+  function getGameResult() {
+    if (teamScore > opponentScore) {
+      return (
+        <div className="flex text-green-500">
+          <div className="mr-2 content-center rounded-lg bg-green-500 px-2 text-sm text-white">
+            W
+          </div>
+          <span>
+            {teamScore} - {opponentScore}
+          </span>
+        </div>
+      );
+    } else if (teamScore < opponentScore) {
+      return (
+        <div className="flex text-red-500">
+          <div className="mr-2 content-center rounded-lg bg-red-500 px-2 text-sm text-white">
+            L
+          </div>
+          <span>
+            {teamScore} - {opponentScore}
+          </span>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex text-gray-500">
+          <div className="mr-2 content-center rounded-lg bg-gray-500 px-2 text-sm text-white">
+            T
+          </div>
+          <span>
+            {teamScore} - {opponentScore}
+          </span>
+        </div>
+      );
+    }
+  }
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  return (
+    <li
+      key={game.id}
+      className="grid grid-cols-3 items-center border-b border-gray-200 py-2 first:pt-0 last:border-none"
+    >
+      <div className="flex flex-col items-start">
+        {getGameResult()}
+        <span className="pt-1 text-xs text-gray-500">
+          {new Date(game.date).toLocaleDateString()}
+        </span>
+      </div>
+      <span className="mr-2 justify-self-center text-sm text-gray-500">
+        {game.homeTeamId === teamId ? "vs" : "@"}
+      </span>
+      <div className="flex flex-col text-sm">
+        <Link href={`/teams/${opponentId}`}>{opponent?.name}</Link>
+        {game.friendly ? (
+          <p className="text-xs text-gray-500">Friendly</p>
+        ) : null}
+      </div>
+    </li>
   );
 }
 
