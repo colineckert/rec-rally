@@ -287,7 +287,7 @@ function GameListItem({ game, teamId }: GameListItemProps) {
       return (
         <div className="flex text-gray-500">
           <div className="mr-2 content-center rounded-lg bg-gray-500 px-2 text-sm text-white">
-            T
+            D
           </div>
           <span>
             {teamScore} - {opponentScore}
@@ -304,18 +304,18 @@ function GameListItem({ game, teamId }: GameListItemProps) {
   return (
     <li
       key={game.id}
-      className="grid grid-cols-3 items-center border-b border-gray-200 py-2 first:pt-0 last:border-none"
+      className="grid grid-cols-3 items-start border-b border-gray-200 py-2 first:pt-0 last:border-none"
     >
-      <div className="flex flex-col items-start">
-        {getGameResult()}
+      <div className="justify-self-start">{getGameResult()}</div>
+      <div className="flex flex-col items-center">
+        <span className="text-sm text-gray-500">
+          {game.homeTeamId === teamId ? "vs" : "@"}
+        </span>
         <span className="pt-1 text-xs text-gray-500">
           {new Date(game.date).toLocaleDateString()}
         </span>
       </div>
-      <span className="mr-2 justify-self-center text-sm text-gray-500">
-        {game.homeTeamId === teamId ? "vs" : "@"}
-      </span>
-      <div className="flex flex-col text-sm">
+      <div className="flex flex-col justify-self-end text-sm">
         <Link href={`/teams/${opponentId}`}>{opponent?.name}</Link>
         {game.friendly ? (
           <p className="text-xs text-gray-500">Friendly</p>
