@@ -72,6 +72,7 @@ const LeaguePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             ) : null}
           </div>
           <TeamsList teams={teams} />
+          <UpcomingGames />
         </div>
         <InfinitePostList
           posts={posts.data?.pages?.flatMap((page) => page.posts) ?? []}
@@ -123,6 +124,14 @@ function TeamsList({
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function UpcomingGames() {
+  return (
+    <div className="px-2">
+      <h3 className="pb-2 text-lg font-bold">Upcoming Games</h3>
     </div>
   );
 }
