@@ -69,7 +69,10 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         </div>
         <div className="flex gap-2 py-3 sm:py-0">
           {isPlayer && (
-            <Button gray onClick={() => setLeaveTeamModalOpen(true)}>
+            <Button
+              className="bg-red-500 hover:bg-red-400 focus-visible:bg-red-400"
+              onClick={() => setLeaveTeamModalOpen(true)}
+            >
               Leave
             </Button>
           )}
