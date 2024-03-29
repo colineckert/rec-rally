@@ -76,7 +76,12 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               Leave
             </Button>
           )}
-          {isManager && <ManageTeamDropdown team={team} />}
+          {isManager && (
+            <div className="flex gap-2">
+              <Button gray>Add Game</Button>
+              <ManageTeamDropdown team={team} />
+            </div>
+          )}
         </div>
       </header>
       <main>
