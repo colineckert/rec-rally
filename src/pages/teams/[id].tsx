@@ -24,11 +24,13 @@ import { Button } from "~/components/Button";
 import { LeaveTeamModal } from "~/components/team-modal/Leave";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
+import { GameInvite } from "~/components/team-modal/GameInvite";
 
 const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
   const [leaveTeamModalOpen, setLeaveTeamModalOpen] = useState(false);
+  const [gameInviteModalOpen, setGameInviteModalOpen] = useState(false);
   const session = useSession();
   const currentUserId = session.data?.user?.id;
   const { data: team } = api.team.getById.useQuery({ id });
@@ -78,7 +80,7 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           )}
           {isManager && (
             <div className="flex gap-2">
-              <Button gray>Add Game</Button>
+              <GameInvite team={team} />
               <ManageTeamDropdown team={team} />
             </div>
           )}
