@@ -49,14 +49,6 @@ const defaultFormValues: GameInviteFormValues = {
   friendly: false,
 };
 
-// TODO:
-// - Select opponent team
-// - Select date
-// - Friendly switch
-// - Submit button
-// - Handle submit
-// - Handle close
-
 function GameInviteModal({
   homeTeam,
   isOpen,
@@ -147,8 +139,10 @@ function GameInviteModal({
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    Invite players to a game. Select the opponent team and the
-                    game's scheduled date.
+                    Invite players to a game by selecting the opponent team and
+                    the game's scheduled date. Note that only league managers
+                    can log game results. Non-league and friendly games are not
+                    counted towards the league standings.
                   </p>
                 </div>
                 <form id="log-game-form" onSubmit={handleSubmit}>
