@@ -30,7 +30,6 @@ const TeamPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
   const [leaveTeamModalOpen, setLeaveTeamModalOpen] = useState(false);
-  const [gameInviteModalOpen, setGameInviteModalOpen] = useState(false);
   const session = useSession();
   const currentUserId = session.data?.user?.id;
   const { data: team } = api.team.getById.useQuery({ id });
