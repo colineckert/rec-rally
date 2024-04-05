@@ -4,7 +4,7 @@ import type { AppRouter } from "~/server/api/root";
 import { api } from "~/utils/api";
 import { HiCheck } from "react-icons/hi";
 import { HiChevronUpDown } from "react-icons/hi2";
-import { Combobox, Dialog, Switch, Transition } from "@headlessui/react";
+import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { Button } from "../Button";
 import type { Team } from "@prisma/client";
 
@@ -40,13 +40,11 @@ type GameInviteModalProps = {
 type GameInviteFormValues = {
   awayTeam: Team | null;
   date: Date | null;
-  friendly: boolean;
 };
 
 const defaultFormValues: GameInviteFormValues = {
   awayTeam: null,
   date: null,
-  friendly: false,
 };
 
 function GameInviteModal({
@@ -70,7 +68,7 @@ function GameInviteModal({
             .includes(query.toLowerCase().replace(/\s+/g, "")),
         );
 
-  // const createGame = api.post.create.useMutation();
+  const createGameInvite = api.post.createGameInvite.useMutation();
 
   const handleClose = () => {
     closeModal();
@@ -84,22 +82,17 @@ function GameInviteModal({
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
-    const { awayTeam, date, friendly } = formValues;
+    const { awayTeam } = formValues;
 
-    if (!awayTeam) return;
+    if (!homeTeam || !awayTeam) return;
 
-    // await createGame.mutateAsync({
-    //   date,
-    //   homeTeamId: homeTeam.id,
-    //   awayTeamId: awayTeam.id,
-    //   friendly,
-    // });
-
-    // await createGameRecap.mutateAsync({
-    //   content: `Game between ${homeTeam.name} and ${awayTeam.name}`,
-    //   homeTeamId: homeTeam.id,
-    //   awayTeamId: awayTeam.id,
-    // });
+    await createGameInvite.mutateAsync({
+      // TODO: Add date picker to form
+      // date,
+      homeTeamId: homeTeam.id,
+      awayTeamId: awayTeam.id,
+      leagueId: homeTeam.league?.id,
+    });
 
     handleClose();
   };
@@ -146,7 +139,7 @@ function GameInviteModal({
                   </p>
                 </div>
                 <form id="log-game-form" onSubmit={handleSubmit}>
-                  <div className="mt-10 grid grid-cols-1 gap-x-4 gap-y-4">
+                  <div className="mt-10 grid grid-cols-1 gap-x-4 gap-y-4 border-b border-gray-900/10 pb-10">
                     <div className="col-span-full">
                       <label
                         htmlFor="players"
@@ -238,37 +231,6 @@ function GameInviteModal({
                     </div>
                   </div>
                   <div className="space-y-12">
-                    <div className="border-b border-gray-900/10 pb-10">
-                      <div className="flex items-center gap-2 pt-6">
-                        <Switch
-                          checked={formValues.friendly}
-                          onChange={(value) => {
-                            setFormValues((prev) => ({
-                              ...prev,
-                              friendly: value,
-                            }));
-                          }}
-                          className={`${
-                            formValues.friendly ? "bg-green-500" : "bg-gray-500"
-                          }
-                            relative inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
-                        >
-                          <span className="sr-only">Use setting</span>
-                          <span
-                            aria-hidden="true"
-                            className={`${
-                              formValues.friendly
-                                ? "translate-x-5"
-                                : "translate-x-0"
-                            }
-                              pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-                          />
-                        </Switch>
-                        <span className="text-sm leading-6 text-gray-900">
-                          Friendly
-                        </span>
-                      </div>
-                    </div>
                     <div className="mt-6 flex items-center justify-end gap-x-6">
                       <button
                         type="button"
@@ -279,7 +241,9 @@ function GameInviteModal({
                       </button>
                       <button
                         type="submit"
-                        // disabled={createGame.isLoading || !formValues.awayTeam}
+                        disabled={
+                          createGameInvite.isLoading || !formValues.awayTeam
+                        }
                         className="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                       >
                         Save
