@@ -207,6 +207,31 @@ export const postRouter = createTRPCRouter({
 
       return post;
     }),
+  createGameInvite: protectedProcedure
+    .input(
+      z.object({
+        homeTeamId: z.string(),
+        awayTeamId: z.string(),
+        leagueId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const currentUserId = ctx.session?.user?.id;
+      const post = await ctx.db.post.create({
+        data: {
+          userId: currentUserId,
+          type: "GAME_INVITE",
+          homeTeamId: input.homeTeamId,
+          awayTeamId: input.awayTeamId,
+          leagueId: input.leagueId,
+          content: `Game invite: ${input.homeTeamId} vs ${input.awayTeamId}`,
+        },
+      });
+
+      void ctx.revalidateSSG?.(`/profiles/${ctx.session.user.id}`);
+
+      return post;
+    }),
   toggleLike: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id }, ctx }) => {
