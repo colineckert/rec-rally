@@ -6,9 +6,10 @@ import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { GameRecap } from "./GameRecap";
 import type { Post } from "~/types/post";
 import { getFormattedDate } from "~/utils/formatters";
+import { GameRecap } from "./GameRecap";
+import { GameInvite } from "./GameInvite";
 
 type InfinitePostListProps = {
   isLoading: boolean;
@@ -45,6 +46,9 @@ export function InfinitePostList({
         {posts.map((post) => {
           if (post.type === "GAME_RECAP") {
             return <GameRecap key={post.id} {...post} />;
+          }
+          if (post.type === "GAME_INVITE") {
+            return <GameInvite key={post.id} {...post} />;
           }
           return <PostListItem key={post.id} {...post} />;
         })}
